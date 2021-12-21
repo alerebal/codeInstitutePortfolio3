@@ -71,6 +71,47 @@ def create_food():
     print(food.food_description())
 
 
+def get_object_from_worksheet(name, worksheet):
+    """
+    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
+    """   
+    ws = SH.worksheet(worksheet).get_all_records()
+    objt_list = []
+    for obj in ws:
+        if obj['name'].upper().find(name.upper()) != -1:
+            objt_list.append(obj)
+    if len(objt_list) < 1:
+        print('Data could not been found')
+        return False
+    elif len(objt_list) == 1:
+        print(objt_list[0])
+        return objt_list[0]
+    else:
+        print('There are more than 1 coincidence with that name')
+        for obj in objt_list:
+            if worksheet == 'kids':
+                print(f"{obj['name']} {obj['last_name']}- Id: {obj['id']}")
+            elif worksheet == 'foods':
+                print(f"{obj['name']} with ingredients: {obj['ingredients']} - Id: {obj['id']}")
+        id = int(input("Choise one by Id:\n"))
+        selected_obj = get_data_from_id(id, ws)
+        if worksheet == 'kids':
+            print(f"{selected_obj['name']} {selected_obj['last_name']} selected")
+        elif worksheet == 'foods':
+            print(f"{selected_obj['name']} with id {selected_obj['id']} selected")
+        pprint(selected_obj)
+        return selected_obj
+
+def get_data_from_id(id, data_list):
+    """
+    Get an id and looking for an object in a list of dictionaries
+    """
+    for data in data_list:
+        if data['id'] == int(id):
+            return data
+    return False
+
+
 def validate_data(inp, regex):
     """Check if data input have the correct format"""
     while True:
@@ -84,4 +125,4 @@ def validate_data(inp, regex):
             print(error)
 
 
-create_food()
+get_object_from_worksheet('cara', 'foods')
