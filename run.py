@@ -2,7 +2,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 from models.Kid import Kid
-from models.Food import Food
+from models.Recipe import Recipe
 import re
 
 
@@ -18,9 +18,9 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 
 SH = GSPREAD_CLIENT.open('daily_menu_management')
 KIDS = SH.worksheet('kids')
-FOODS = SH.worksheet('foods')
+RECIPES = SH.worksheet('recipes')
 ALL_KIDS = KIDS.get_all_records()
-ALL_FOODS = FOODS.get_all_records()
+ALL_RECIPES = RECIPES.get_all_records()
 
 # regular expressions
 only_letters_regex = "[a-zA-Z\s']+"
@@ -51,7 +51,7 @@ def create_kid():
     print(kid.kid_description())
 
 
-def create_food():
+def create_recipe():
     """
     Create a recipe and add it to the database
     """
@@ -60,15 +60,15 @@ def create_food():
     name = validate_data('Name(only letters): \n', only_letters_regex)
     ingredients = validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
     # get last food id from worksheet, if there is no food yet, I have to assign 0
-    if len(ALL_FOODS) == 0:
+    if len(ALL_RECIPES) == 0:
         last_id = 0
     else:
-        last_id = FOODS.row_values(len(ALL_FOODS) + 1)[0]
+        last_id = RECIPES.row_values(len(ALL_RECIPES) + 1)[0]
     # create a food and save it in the worksheet
-    food = Food(name, ingredients)
-    food._get_id(int(last_id))
-    FOODS.append_row(food.food_info())
-    print(food.food_description())
+    recipe = Recipe(name, ingredients)
+    recipe._get_id(int(last_id))
+    RECIPES.append_row(recipe.recipe_info())
+    print(recipe.recipe_description())
 
 
 def get_object_from_worksheet(name, worksheet):
@@ -91,13 +91,13 @@ def get_object_from_worksheet(name, worksheet):
         for obj in objt_list:
             if worksheet == 'kids':
                 print(f"{obj['name']} {obj['last_name']}- Id: {obj['id']}")
-            elif worksheet == 'foods':
+            elif worksheet == 'recipes':
                 print(f"{obj['name']} with ingredients: {obj['ingredients']} - Id: {obj['id']}")
         id = int(input("Choise one by Id:\n"))
         selected_obj = get_data_from_id(id, ws)
         if worksheet == 'kids':
             print(f"{selected_obj['name']} {selected_obj['last_name']} selected")
-        elif worksheet == 'foods':
+        elif worksheet == 'recipes':
             print(f"{selected_obj['name']} with id {selected_obj['id']} selected")
         pprint(selected_obj)
         return selected_obj
@@ -125,4 +125,4 @@ def validate_data(inp, regex):
             print(error)
 
 
-get_object_from_worksheet('cara', 'foods')
+create_recipe()
