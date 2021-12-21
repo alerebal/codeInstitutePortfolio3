@@ -2,6 +2,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 from models.Kid import Kid
+from models.Food import Food
 import re
 
 
@@ -22,10 +23,10 @@ ALL_KIDS = KIDS.get_all_records()
 ALL_FOODS = FOODS.get_all_records()
 
 # regular expressions
-only_letters_regex = "^[a-zA-Z]+\s*"
-age_regex = "^[1-3]$"
+only_letters_regex = "[a-zA-Z\s']+"
+age_regex = "[1-3]{1}"
 phone_number_regex = "\d{3}-\d{3}-\d{4}"
-list_regex = "(^[a-z]+\s*[,]*)*"
+list_regex = "(^[a-z,\s]+)*"
 
 
 def create_kid():
@@ -50,12 +51,32 @@ def create_kid():
     print(kid.kid_description())
 
 
+def create_food():
+    """
+    Create a recipe and add it to the database
+    """
+    print('Create a new food')
+    # get the variables from the inputs
+    name = validate_data('Name(only letters): \n', only_letters_regex)
+    ingredients = validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
+    # get last food id from worksheet, if there is no food yet, I have to assign 0
+    if len(ALL_FOODS) == 0:
+        last_id = 0
+    else:
+        last_id = FOODS.row_values(len(ALL_FOODS) + 1)[0]
+    # create a food and save it in the worksheet
+    food = Food(name, ingredients)
+    food._get_id(int(last_id))
+    FOODS.append_row(food.food_info())
+    print(food.food_description())
+
+
 def validate_data(inp, regex):
     """Check if data input have the correct format"""
     while True:
         data_to_check = input(inp)
         try:
-            if re.search(regex, data_to_check):
+            if re.fullmatch(regex, data_to_check):
                 return data_to_check
             else:
                 raise ValueError("Please enter the correct data format")
@@ -63,4 +84,4 @@ def validate_data(inp, regex):
             print(error)
 
 
-create_kid()
+create_food()
