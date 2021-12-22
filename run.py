@@ -102,6 +102,26 @@ def get_object_from_worksheet(name, worksheet):
         pprint(selected_obj)
         return selected_obj
 
+
+def retrieve_kids_data():
+    """
+    Retrieve users data from database. One particular user, a group of users by their color group or all the users
+    """
+    print("If you want to get data of one particular user enter their name.")
+    print("If you want data about all the users press 'ALL'.")
+    print("Press 'BLUE', 'GREEN' or 'YELLOW' to get data of each group.")
+    select = input("Enter your option:\n")
+    if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
+        filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
+        pprint(filter_list, sort_dicts=False)
+        return filter_list
+    elif select.upper() == 'ALL':
+        pprint(ALL_KIDS)
+        return ALL_KIDS
+    else:
+        return get_object_from_worksheet(select.upper(), 'kids')
+
+
 def get_data_from_id(id, data_list):
     """
     Get an id and looking for an object in a list of dictionaries
@@ -125,4 +145,4 @@ def validate_data(inp, regex):
             print(error)
 
 
-create_recipe()
+retrieve_kids_data()
