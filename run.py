@@ -71,6 +71,41 @@ def create_recipe():
     print(recipe.recipe_description())
 
 
+def daily_menu():
+    """
+    Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
+    """
+    kids = retrieve_kids_data()
+    pprint(ALL_RECIPES)
+    id_input= input('Select a recipe by its id:\n')
+    recipe = get_data_from_id(id_input, ALL_RECIPES)
+    ingredients = recipe['ingredients'].split(',')
+    is_someone_allergic = find_kids_allergic_to_recipe(kids, ingredients)
+    if len(is_someone_allergic) > 1:
+        print('There are some kids allergic to this recipe')
+        pprint(is_someone_allergic)
+    elif len(is_someone_allergic) == 1:
+        print('There is a kid allergic to this recipe')
+        pprint(is_someone_allergic)
+    else:
+        print('There are no kids allergic to this recipe')
+
+
+def find_kids_allergic_to_recipe(kids, ingredients):
+    """
+    Find any kid or kids with allergies to some or several ingredients  
+    """
+    kids_allergic_to_recipe = []
+    for kid in kids:
+        if not kid['allergies'] == '':
+            # I have to take off the blank spaces in both ingredients and allergies for them to match
+            kid_allergies = [aller.strip() for aller in kid['allergies'].split(',')]
+            for ing in ingredients:
+                if ing.strip() in kid_allergies:
+                    kids_allergic_to_recipe.append(kid)
+    return kids_allergic_to_recipe
+
+
 def get_object_from_worksheet(name, worksheet):
     """
     Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
@@ -113,10 +148,10 @@ def retrieve_kids_data():
     select = input("Enter your option:\n")
     if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
         filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
-        pprint(filter_list, sort_dicts=False)
+        # pprint(filter_list, sort_dicts=False)
         return filter_list
     elif select.upper() == 'ALL':
-        pprint(ALL_KIDS)
+        # pprint(ALL_KIDS)
         return ALL_KIDS
     else:
         return get_object_from_worksheet(select.upper(), 'kids')
@@ -160,4 +195,4 @@ def validate_data(inp, regex):
             print(error)
 
 
-retrieve_recipe_data()
+daily_menu()
