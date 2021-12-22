@@ -83,10 +83,15 @@ def daily_menu():
     is_someone_allergic = find_kids_allergic_to_recipe(kids, ingredients)
     if len(is_someone_allergic) > 1:
         print('There are some kids allergic to this recipe')
-        pprint(is_someone_allergic)
+        for kid in is_someone_allergic:
+            kid_allow_recipes = recipes_for_an_allergic_kid(kid)
+            pprint(kid['name'])
+            pprint(kid_allow_recipes)
     elif len(is_someone_allergic) == 1:
         print('There is a kid allergic to this recipe')
-        pprint(is_someone_allergic)
+        pprint(is_someone_allergic[0]['name'])
+        kid_allow_recipes = recipes_for_an_allergic_kid(is_someone_allergic[0])
+        pprint(kid_allow_recipes)
     else:
         print('There are no kids allergic to this recipe')
 
@@ -104,6 +109,22 @@ def find_kids_allergic_to_recipe(kids, ingredients):
                 if ing.strip() in kid_allergies:
                     kids_allergic_to_recipe.append(kid)
     return kids_allergic_to_recipe
+
+
+def recipes_for_an_allergic_kid(kid):
+    """
+    Find all the recipes that an allergic kid can eat
+    """
+    allergies = [aller.strip() for aller in kid['allergies'].split(',')]
+    allow_recipes = []
+    for recipe in ALL_RECIPES:
+        ingredients = [ing.strip() for ing in recipe['ingredients'].split(',')]
+        for aller in allergies:
+            if aller in ingredients:
+                recipe['not allowed'] = True
+        if not recipe.get('not allowed'):
+            allow_recipes.append(recipe)
+    return allow_recipes
 
 
 def get_object_from_worksheet(name, worksheet):
