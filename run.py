@@ -3,7 +3,7 @@ from google.oauth2.service_account import Credentials
 from pprint import pprint
 from models.Kid import Kid
 from models.Recipe import Recipe
-import re
+from helpers.helpers import get_data_from_id, validate_data
 
 
 SCOPE = [
@@ -127,38 +127,6 @@ def recipes_for_an_allergic_kid(kid):
     return allow_recipes
 
 
-def get_object_from_worksheet(name, worksheet):
-    """
-    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
-    """   
-    ws = SH.worksheet(worksheet).get_all_records()
-    objt_list = []
-    for obj in ws:
-        if obj['name'].upper().find(name.upper()) != -1:
-            objt_list.append(obj)
-    if len(objt_list) < 1:
-        print('Data could not been found')
-        return False
-    elif len(objt_list) == 1:
-        print(objt_list[0])
-        return objt_list[0]
-    else:
-        print('There are more than 1 coincidence with that name')
-        for obj in objt_list:
-            if worksheet == 'kids':
-                print(f"{obj['name']} {obj['last_name']}- Id: {obj['id']}")
-            elif worksheet == 'recipes':
-                print(f"{obj['name']} with ingredients: {obj['ingredients']} - Id: {obj['id']}")
-        id = int(input("Choise one by Id:\n"))
-        selected_obj = get_data_from_id(id, ws)
-        if worksheet == 'kids':
-            print(f"{selected_obj['name']} {selected_obj['last_name']} selected")
-        elif worksheet == 'recipes':
-            print(f"{selected_obj['name']} with id {selected_obj['id']} selected")
-        pprint(selected_obj)
-        return selected_obj
-
-
 def retrieve_kids_data():
     """
     Retrieve kids data from database. One particular kid, a group of kids by their color group or all the kids
@@ -193,27 +161,36 @@ def retrieve_recipe_data():
         return recipe
 
 
-def get_data_from_id(id, data_list):
+def get_object_from_worksheet(name, worksheet):
     """
-    Get an id and looking for an object in a list of dictionaries
-    """
-    for data in data_list:
-        if data['id'] == int(id):
-            return data
-    return False
-
-
-def validate_data(inp, regex):
-    """Check if data input have the correct format"""
-    while True:
-        data_to_check = input(inp)
-        try:
-            if re.fullmatch(regex, data_to_check):
-                return data_to_check
-            else:
-                raise ValueError("Please enter the correct data format")
-        except ValueError as error:
-            print(error)
+    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
+    """   
+    ws = SH.worksheet(worksheet).get_all_records()
+    objt_list = []
+    for obj in ws:
+        if obj['name'].upper().find(name.upper()) != -1:
+            objt_list.append(obj)
+    if len(objt_list) < 1:
+        print('Data could not been found')
+        return False
+    elif len(objt_list) == 1:
+        print(objt_list[0])
+        return objt_list[0]
+    else:
+        print('There are more than 1 coincidence with that name')
+        for obj in objt_list:
+            if worksheet == 'kids':
+                print(f"{obj['name']} {obj['last_name']}- Id: {obj['id']}")
+            elif worksheet == 'recipes':
+                print(f"{obj['name']} with ingredients: {obj['ingredients']} - Id: {obj['id']}")
+        id = int(input("Choise one by Id:\n"))
+        selected_obj = get_data_from_id(id, ws)
+        if worksheet == 'kids':
+            print(f"{selected_obj['name']} {selected_obj['last_name']} selected")
+        elif worksheet == 'recipes':
+            print(f"{selected_obj['name']} with id {selected_obj['id']} selected")
+        pprint(selected_obj)
+        return selected_obj
 
 
 daily_menu()
