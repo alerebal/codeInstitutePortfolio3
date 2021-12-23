@@ -4,7 +4,7 @@ from pprint import pprint
 from models.Kid import Kid
 from models.Recipe import Recipe
 from helpers.helpers import get_data_from_id, validate_data
-
+from helpers import help_texts as help
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -193,4 +193,19 @@ def get_object_from_worksheet(name, worksheet):
         return selected_obj
 
 
-daily_menu()
+def main():
+
+    print(help.welcome)
+    while True:
+        inp = input('Your choice: \n')
+        if inp.upper() == 'HELP':
+            print(help.help)
+        elif inp.upper() == 'D':
+            return daily_menu()
+        elif inp.upper() == 'R':
+            return print('Retrieve data')
+        elif inp.upper() == 'C':
+            return print('Create data')
+
+
+main()
