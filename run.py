@@ -75,7 +75,9 @@ def daily_menu():
     """
     Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
     """
-    kids = retrieve_kids_data()
+    print(txt.daily_menu)
+    select = input('Select the children:\n')
+    kids = retrieve_kids_data(select)
     pprint(ALL_RECIPES)
     id_input= input('Select a recipe by its id:\n')
     recipe = get_data_from_id(id_input, ALL_RECIPES)
@@ -136,11 +138,11 @@ def retrive_data_choice():
     if choice.upper() == 'K':
         print(txt.retrieve_users)
         select = input('Your chioce:\n')
-        return retrieve_kids_data(select)
+        retrieve_kids_data(select)
     elif choice.upper() == 'R':
         print(txt.retrieve_recipes)
         select = input('Your choice:\n')
-        return retrieve_recipe_data(select)
+        retrieve_recipe_data(select)
 
 
 def retrieve_kids_data(select):
@@ -149,13 +151,13 @@ def retrieve_kids_data(select):
     """
     if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
         filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
-        pprint(filter_list, sort_dicts=False)
+        # pprint(filter_list, sort_dicts=False)
         return filter_list
     elif select.upper() == 'ALL':
         # pprint(ALL_KIDS)
         return ALL_KIDS
     else:
-        return get_object_from_worksheet(select.upper(), 'kids')
+        get_object_from_worksheet(select.upper(), 'kids')
 
 
 def retrieve_recipe_data(select):

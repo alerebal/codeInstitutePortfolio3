@@ -19,6 +19,11 @@ Create data of a child following different steps. The system will guide you aski
 Create data of a recipe in the same way as to create a kid.
 """
 
+daily_menu = """
+Choose a group of children(enter BLUE, YELLOW or GREEN) or all of them(enter ALL).
+After that, choose a recipe by its ID from the list shown.
+"""
+
 retrieve_data = """
 Press K to retrieve kids data.
 Press R to retrieve recipes data. 
