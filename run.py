@@ -4,7 +4,7 @@ from pprint import pprint
 from models.Kid import Kid
 from models.Recipe import Recipe
 from helpers.helpers import get_data_from_id, validate_data
-from helpers import help_texts as help
+from helpers import help_texts as txt
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -127,17 +127,29 @@ def recipes_for_an_allergic_kid(kid):
     return allow_recipes
 
 
-def retrieve_kids_data():
+def retrive_data_choice():
+    """
+    Give the user the chance to rectrieve data from kids or recipes
+    """
+    print(txt.retrieve_data)
+    choice = input('Your choice:\n')
+    if choice.upper() == 'K':
+        print(txt.retrieve_users)
+        select = input('Your chioce:\n')
+        return retrieve_kids_data(select)
+    elif choice.upper() == 'R':
+        print(txt.retrieve_recipes)
+        select = input('Your choice:\n')
+        return retrieve_recipe_data(select)
+
+
+def retrieve_kids_data(select):
     """
     Retrieve kids data from database. One particular kid, a group of kids by their color group or all the kids
     """
-    print("If you want to get data of one particular kid enter their name(or an approximation of it).")
-    print("If you want data about all the children press 'ALL'.")
-    print("Press 'BLUE', 'GREEN' or 'YELLOW' to get data of each group.")
-    select = input("Enter your option:\n")
     if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
         filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
-        # pprint(filter_list, sort_dicts=False)
+        pprint(filter_list, sort_dicts=False)
         return filter_list
     elif select.upper() == 'ALL':
         # pprint(ALL_KIDS)
@@ -146,13 +158,10 @@ def retrieve_kids_data():
         return get_object_from_worksheet(select.upper(), 'kids')
 
 
-def retrieve_recipe_data():
+def retrieve_recipe_data(select):
     """
     Retrieve recipes data from database. One particular recipe or all of them
     """
-    print("If you want to get data of one particular recipe enter their name(or an approximation of it).")
-    print("If you want data about all the recipes press ALL.")
-    select = input("Enter your option:\n")
     if select.upper() == 'ALL':
         pprint(ALL_RECIPES)
         return ALL_RECIPES
@@ -195,7 +204,7 @@ def get_object_from_worksheet(name, worksheet):
 
 def main():
 
-    print(help.welcome)
+    print(txt.welcome)
     while True:
         inp = input('Your choice: \n')
         if inp.upper() == 'HELP':
@@ -203,7 +212,7 @@ def main():
         elif inp.upper() == 'D':
             return daily_menu()
         elif inp.upper() == 'R':
-            return print('Retrieve data')
+            return retrive_data_choice()
         elif inp.upper() == 'C':
             return print('Create data')
 

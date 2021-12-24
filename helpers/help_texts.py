@@ -19,3 +19,19 @@ Create data of a child following different steps. The system will guide you aski
 Create data of a recipe in the same way as to create a kid.
 """
 
+retrieve_data = """
+Press K to retrieve kids data.
+Press R to retrieve recipes data. 
+"""
+
+retrieve_users = """
+If you want to get data of one particular kid enter their name(or an approximation of it).
+If you want data about all the children press 'ALL'.
+Press 'BLUE', 'GREEN' or 'YELLOW' to get data of each group.
+"""
+
+retrieve_recipes = """
+If you want to get a particular recipe enter its name(or an approximation of if).
+For all the recipes data press ALL.
+"""
+
