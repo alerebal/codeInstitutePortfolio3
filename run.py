@@ -3,7 +3,8 @@ from google.oauth2.service_account import Credentials
 from pprint import pprint
 from models.Kid import Kid
 from models.Recipe import Recipe
-from helpers.helpers import get_data_from_id, validate_data, print_recipe
+# from helpers.helpers import get_data_from_id, validate_data, print_recipe, recipes_for_an_allergic_kid, find_kids_allergic_to_recipe
+import helpers.helpers as help
 from helpers import help_texts as txt
 
 SCOPE = [
@@ -33,12 +34,12 @@ def create_kid():
     """Create an user and add it to the database"""
     print('Creat a new kid')
     # get the variables from inputs
-    name = validate_data("Name(only letters): \n", only_letters_regex)
-    last_name = validate_data("Last name(only letters): \n", only_letters_regex)
-    age = int(validate_data("Age(Number between 1 and 3): \n", age_regex))
-    tutor = validate_data("Name of the tutor(only letters): \n", only_letters_regex)
-    contact = validate_data("Contact number(must have this format: 123-456-7890): \n", phone_number_regex)
-    allergies = validate_data("Allergies(only lowercase letters, if more than one, separated by commas. If no allergies, just leave it blank): \n", list_regex)
+    name = help.validate_data("Name(only letters): \n", only_letters_regex)
+    last_name = help.validate_data("Last name(only letters): \n", only_letters_regex)
+    age = int(help.validate_data("Age(Number between 1 and 3): \n", age_regex))
+    tutor = help.validate_data("Name of the tutor(only letters): \n", only_letters_regex)
+    contact = help.validate_data("Contact number(must have this format: 123-456-7890): \n", phone_number_regex)
+    allergies = help.validate_data("Allergies(only lowercase letters, if more than one, separated by commas. If no allergies, just leave it blank): \n", list_regex)
     # get last kid id from worksheet, if there is no kids yet, I have to assign 0, if not, it give me an error
     if len(ALL_KIDS) == 0:
         last_id = 0
@@ -57,8 +58,8 @@ def create_recipe():
     """
     print('Create a new food')
     # get the variables from the inputs
-    name = validate_data('Name(only letters): \n', only_letters_regex)
-    ingredients = validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
+    name = help.validate_data('Name(only letters): \n', only_letters_regex)
+    ingredients = help.validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
     # get last food id from worksheet, if there is no food yet, I have to assign 0
     if len(ALL_RECIPES) == 0:
         last_id = 0
@@ -79,68 +80,37 @@ def daily_menu():
     select = input('Select the children:\n')
     kids = retrieve_kids_data(select)
     for recipe in ALL_RECIPES:
-        print_recipe(recipe)
+        help.print_recipe(recipe)
     id_input= input('Select a recipe by its id:\n')
-    recipe = get_data_from_id(id_input, ALL_RECIPES)
+    recipe = help.get_data_from_id(id_input, ALL_RECIPES)
     # ingredients = recipe['ingredients'].split(',')
-    is_someone_allergic = find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
+    is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
     if len(is_someone_allergic) > 1:
         print('There are some kids allergic to this recipe')
         print('Choose another recipe for them\n')
         for kid in is_someone_allergic:
-            kid_allow_recipes = recipes_for_an_allergic_kid(kid)
+            kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
             print(f"{kid['name']} {kid['last_name']}")
             for allow_recipe in kid_allow_recipes:
-                print_recipe(allow_recipe)
+                help.print_recipe(allow_recipe)
             print('')
         new_recipe_id = int(input('Choose the recipe by Id: \n'))
-        new_recipe = get_data_from_id(new_recipe_id, ALL_RECIPES)
+        new_recipe = help.get_data_from_id(new_recipe_id, ALL_RECIPES)
         print(new_recipe)
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
         print('There is a kid allergic to this recipe')
         print('Choose another recipe for they\n')
-        kid_allow_recipes = recipes_for_an_allergic_kid(kid)
+        kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
         print(f"{kid['name']} {kid['last_name']}")
         for allow_recipe in kid_allow_recipes:
-                print_recipe(allow_recipe)
+                help.print_recipe(allow_recipe)
         new_recipe = False
         while new_recipe == False:
             new_recipe_id = input('Choose the recipe by Id: \n')
-            new_recipe = get_data_from_id(new_recipe_id, kid_allow_recipes)
+            new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
     else:
         print('There are no kids allergic to this recipe')
-
-
-def find_kids_allergic_to_recipe(kids, ingredients):
-    """
-    Find any kid or kids with allergies to some or several ingredients  
-    """
-    kids_allergic_to_recipe = []
-    for kid in kids:
-        if not kid['allergies'] == '':
-            # I have to take off the blank spaces in both ingredients and allergies for them to match
-            kid_allergies = [aller.strip() for aller in kid['allergies'].split(',')]
-            for ing in ingredients:
-                if ing.strip() in kid_allergies:
-                    kids_allergic_to_recipe.append(kid)
-    return kids_allergic_to_recipe
-
-
-def recipes_for_an_allergic_kid(kid):
-    """
-    Find all the recipes that an allergic kid can eat
-    """
-    allergies = [aller.strip() for aller in kid['allergies'].split(',')]
-    allow_recipes = []
-    for recipe in ALL_RECIPES:
-        ingredients = [ing.strip() for ing in recipe['ingredients'].split(',')]
-        for aller in allergies:
-            if aller in ingredients:
-                recipe['not allowed'] = True
-        if not recipe.get('not allowed'):
-            allow_recipes.append(recipe)
-    return allow_recipes
 
 
 def retrive_data_choice():
@@ -209,7 +179,7 @@ def get_object_from_worksheet(name, worksheet):
             elif worksheet == 'recipes':
                 print(f"{obj['name']} with ingredients: {obj['ingredients']} - Id: {obj['id']}")
         id = int(input("Choise one by Id:\n"))
-        selected_obj = get_data_from_id(id, ws)
+        selected_obj = help.get_data_from_id(id, ws)
         if worksheet == 'kids':
             print(f"{selected_obj['name']} {selected_obj['last_name']} selected")
         elif worksheet == 'recipes':

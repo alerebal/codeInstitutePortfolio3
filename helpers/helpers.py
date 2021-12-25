@@ -32,3 +32,33 @@ def print_recipe(recipe):
     """
     print(f"Id: {recipe['id']} - {recipe['name']}.")
 
+
+def find_kids_allergic_to_recipe(kids, ingredients):
+    """
+    Find any kid or kids with allergies to some or several ingredients  
+    """
+    kids_allergic_to_recipe = []
+    for kid in kids:
+        if not kid['allergies'] == '':
+            # I have to take off the blank spaces in both ingredients and allergies for them to match
+            kid_allergies = [aller.strip() for aller in kid['allergies'].split(',')]
+            for ing in ingredients:
+                if ing.strip() in kid_allergies:
+                    kids_allergic_to_recipe.append(kid)
+    return kids_allergic_to_recipe
+
+
+def recipes_for_an_allergic_kid(kid, recipes):
+    """
+    Find all the recipes that an allergic kid can eat from a list of recipes
+    """
+    allergies = [aller.strip() for aller in kid['allergies'].split(',')]
+    allow_recipes = []
+    for recipe in recipes:
+        ingredients = [ing.strip() for ing in recipe['ingredients'].split(',')]
+        for aller in allergies:
+            if aller in ingredients:
+                recipe['not allowed'] = True
+        if not recipe.get('not allowed'):
+            allow_recipes.append(recipe)
+    return allow_recipes
