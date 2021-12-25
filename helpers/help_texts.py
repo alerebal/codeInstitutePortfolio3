@@ -22,6 +22,7 @@ Create data of a recipe in the same way as to create a kid.
 daily_menu = """
 Choose a group of children(enter BLUE, YELLOW or GREEN) or all of them(enter ALL).
 After that, choose a recipe by its ID from the list shown.
+If one or more kids are allergic to the recipe, a list of allowed recipes for each kid will be shown and you will be able to choice another recipe for those kids.
 """
 
 retrieve_data = """

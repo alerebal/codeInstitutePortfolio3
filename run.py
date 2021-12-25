@@ -3,7 +3,7 @@ from google.oauth2.service_account import Credentials
 from pprint import pprint
 from models.Kid import Kid
 from models.Recipe import Recipe
-from helpers.helpers import get_data_from_id, validate_data
+from helpers.helpers import get_data_from_id, validate_data, print_recipe
 from helpers import help_texts as txt
 
 SCOPE = [
@@ -78,22 +78,36 @@ def daily_menu():
     print(txt.daily_menu)
     select = input('Select the children:\n')
     kids = retrieve_kids_data(select)
-    pprint(ALL_RECIPES)
+    for recipe in ALL_RECIPES:
+        print_recipe(recipe)
     id_input= input('Select a recipe by its id:\n')
     recipe = get_data_from_id(id_input, ALL_RECIPES)
-    ingredients = recipe['ingredients'].split(',')
-    is_someone_allergic = find_kids_allergic_to_recipe(kids, ingredients)
+    # ingredients = recipe['ingredients'].split(',')
+    is_someone_allergic = find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
     if len(is_someone_allergic) > 1:
         print('There are some kids allergic to this recipe')
+        print('Choose another recipe for them\n')
         for kid in is_someone_allergic:
             kid_allow_recipes = recipes_for_an_allergic_kid(kid)
-            pprint(kid['name'])
-            pprint(kid_allow_recipes)
+            print(f"{kid['name']} {kid['last_name']}")
+            for allow_recipe in kid_allow_recipes:
+                print_recipe(allow_recipe)
+            print('')
+        new_recipe_id = int(input('Choose the recipe by Id: \n'))
+        new_recipe = get_data_from_id(new_recipe_id, ALL_RECIPES)
+        print(new_recipe)
     elif len(is_someone_allergic) == 1:
+        kid = is_someone_allergic[0]
         print('There is a kid allergic to this recipe')
-        pprint(is_someone_allergic[0]['name'])
-        kid_allow_recipes = recipes_for_an_allergic_kid(is_someone_allergic[0])
-        pprint(kid_allow_recipes)
+        print('Choose another recipe for they\n')
+        kid_allow_recipes = recipes_for_an_allergic_kid(kid)
+        print(f"{kid['name']} {kid['last_name']}")
+        for allow_recipe in kid_allow_recipes:
+                print_recipe(allow_recipe)
+        new_recipe = False
+        while new_recipe == False:
+            new_recipe_id = input('Choose the recipe by Id: \n')
+            new_recipe = get_data_from_id(new_recipe_id, kid_allow_recipes)
     else:
         print('There are no kids allergic to this recipe')
 
@@ -165,7 +179,7 @@ def retrieve_recipe_data(select):
     Retrieve recipes data from database. One particular recipe or all of them
     """
     if select.upper() == 'ALL':
-        pprint(ALL_RECIPES)
+        # pprint(ALL_RECIPES)
         return ALL_RECIPES
     else:
         recipe = get_object_from_worksheet(select.upper(), 'recipes')
