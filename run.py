@@ -3,7 +3,6 @@ from google.oauth2.service_account import Credentials
 from pprint import pprint
 from models.Kid import Kid
 from models.Recipe import Recipe
-# from helpers.helpers import get_data_from_id, validate_data, print_recipe, recipes_for_an_allergic_kid, find_kids_allergic_to_recipe
 import helpers.helpers as help
 from helpers import help_texts as txt
 
@@ -77,40 +76,59 @@ def daily_menu():
     Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
     """
     print(txt.daily_menu)
-    select = input('Select the children:\n')
-    kids = retrieve_kids_data(select)
+    kids = None
+    while kids == None:
+        select = input('Select the children:\n')
+        kids = retrieve_kids_data(select)
     for recipe in ALL_RECIPES:
         help.print_recipe(recipe)
-    id_input= input('Select a recipe by its id:\n')
-    recipe = help.get_data_from_id(id_input, ALL_RECIPES)
-    # ingredients = recipe['ingredients'].split(',')
+    recipe = False
+    while recipe == False:
+        id_input= input('Select a recipe by its id:\n')
+        recipe = help.get_data_from_id(id_input, ALL_RECIPES)
     is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
     if len(is_someone_allergic) > 1:
-        print('There are some kids allergic to this recipe')
+        allowed = []
+        print(f'There are {len(is_someone_allergic)} kids allergic to this recipe')
         print('Choose another recipe for them\n')
         for kid in is_someone_allergic:
             kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
-            print(f"{kid['name']} {kid['last_name']}")
+            print(f"{kid['name']} {kid['last_name']} can eat:")
             for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
             print('')
-        new_recipe_id = int(input('Choose the recipe by Id: \n'))
-        new_recipe = help.get_data_from_id(new_recipe_id, ALL_RECIPES)
-        print(new_recipe)
+            new_recipe = False
+            while new_recipe == False:
+                new_recipe_id = input('Choose the recipe by Id: \n')
+                new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
+            if new_recipe in allowed:
+                new_recipe['quantity'] += 1
+            else:
+                new_recipe['quantity'] = 1
+                allowed.append(new_recipe)
+        print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
+        for new_recipe in allowed:
+            if new_recipe['quantity'] > 1:
+                print(f"Must be prepared {new_recipe['quantity']} rations of {new_recipe['name']}")
+            else:
+                print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
         print('There is a kid allergic to this recipe')
         print('Choose another recipe for they\n')
         kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
-        print(f"{kid['name']} {kid['last_name']}")
+        print(f"{kid['name']} {kid['last_name']} can eat:")
         for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
         new_recipe = False
         while new_recipe == False:
             new_recipe_id = input('Choose the recipe by Id: \n')
             new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
+        print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
+        print(f"Must be prepared 1 ration of {new_recipe['name']}")
     else:
         print('There are no kids allergic to this recipe')
+        print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
 
 
 def retrive_data_choice():
