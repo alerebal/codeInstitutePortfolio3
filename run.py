@@ -29,6 +29,22 @@ phone_number_regex = "\d{3}-\d{3}-\d{4}"
 list_regex = "(^[a-z,\s]+)*"
 
 
+def create_data_choice():
+    """
+    Give the user the chance to create kid or recipe data and save it in the worksheet
+    """
+    print(txt.create_data)
+    choice = None
+    while choice == None:
+        choice = input('Your choice:\n')
+        if choice.upper() == 'K':
+            create_kid()
+        elif choice.upper() == 'R':
+            create_recipe()
+        else:
+            choice = None
+
+
 def create_kid():
     """Create an user and add it to the database"""
     print('Creat a new kid')
@@ -69,6 +85,53 @@ def create_recipe():
     recipe._get_id(int(last_id))
     RECIPES.append_row(recipe.recipe_info())
     print(recipe.recipe_description())
+
+
+def retrive_data_choice():
+    """
+    Give the user the chance to rectrieve data from kids or recipes
+    """
+    print(txt.retrieve_data)
+    choice = None
+    while choice == None:
+        choice = input('Your choice:\n')
+        if choice.upper() == 'K':
+            print(txt.retrieve_users)
+            select = input('Your chioce:\n')
+            retrieve_kids_data(select)
+        elif choice.upper() == 'R':
+            print(txt.retrieve_recipes)
+            select = input('Your choice:\n')
+            retrieve_recipe_data(select)
+        else:
+            choice = None
+
+
+def retrieve_kids_data(select):
+    """
+    Retrieve kids data from database. One particular kid, a group of kids by their color group or all the kids
+    """
+    if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
+        filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
+        return filter_list
+    elif select.upper() == 'ALL':
+        return ALL_KIDS
+    else:
+        kid = help.get_object_from_worksheet(select.upper(), ALL_KIDS)
+        pprint(kid)
+        return kid
+
+
+def retrieve_recipe_data(select):
+    """
+    Retrieve recipes data from database. One particular recipe or all of them
+    """
+    if select.upper() == 'ALL':
+        return ALL_RECIPES
+    else:
+        recipe = help.get_object_from_worksheet(select.upper(), ALL_RECIPES)
+        pprint(recipe)
+        return recipe
 
 
 def daily_menu():
@@ -136,53 +199,6 @@ def daily_menu():
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
 
 
-def retrive_data_choice():
-    """
-    Give the user the chance to rectrieve data from kids or recipes
-    """
-    print(txt.retrieve_data)
-    choice = None
-    while choice == None:
-        choice = input('Your choice:\n')
-        if choice.upper() == 'K':
-            print(txt.retrieve_users)
-            select = input('Your chioce:\n')
-            retrieve_kids_data(select)
-        elif choice.upper() == 'R':
-            print(txt.retrieve_recipes)
-            select = input('Your choice:\n')
-            retrieve_recipe_data(select)
-        else:
-            choice = None
-
-
-def retrieve_kids_data(select):
-    """
-    Retrieve kids data from database. One particular kid, a group of kids by their color group or all the kids
-    """
-    if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
-        filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
-        return filter_list
-    elif select.upper() == 'ALL':
-        return ALL_KIDS
-    else:
-        kid = help.get_object_from_worksheet(select.upper(), ALL_KIDS)
-        pprint(kid)
-        return kid
-
-
-def retrieve_recipe_data(select):
-    """
-    Retrieve recipes data from database. One particular recipe or all of them
-    """
-    if select.upper() == 'ALL':
-        return ALL_RECIPES
-    else:
-        recipe = help.get_object_from_worksheet(select.upper(), ALL_RECIPES)
-        pprint(recipe)
-        return recipe
-
-
 def main():
 
     print(txt.welcome)
@@ -195,7 +211,7 @@ def main():
         elif inp.upper() == 'R':
             return retrive_data_choice()
         elif inp.upper() == 'C':
-            return print('Create data')
+            return create_data_choice()
 
 
 main()

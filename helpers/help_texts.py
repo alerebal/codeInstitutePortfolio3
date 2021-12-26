@@ -25,6 +25,11 @@ After that, choose a recipe by its ID from the list shown.
 If one or more kids are allergic to the recipe, a list of allowed recipes for each kid will be shown and you will be able to choice another recipe for those kids.
 """
 
+create_data = """
+Press K to create a kid data.
+Press R to create a recipe data.
+"""
+
 retrieve_data = """
 Press K to retrieve kids data.
 Press R to retrieve recipes data. 
