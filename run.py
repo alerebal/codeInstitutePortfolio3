@@ -76,17 +76,21 @@ def daily_menu():
     Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
     """
     print(txt.daily_menu)
+    # set to None or False the variables than are needed to run the app and give them a value inside a while loop
     kids = None
     while kids == None:
         select = input('Select the children:\n')
         kids = retrieve_kids_data(select)
+    # show the user all the recipes for their to choose one
     for recipe in ALL_RECIPES:
         help.print_recipe(recipe)
     recipe = False
     while recipe == False:
         id_input= input('Select a recipe by its id:\n')
         recipe = help.get_data_from_id(id_input, ALL_RECIPES)
+    # find out if there are allergic kids to the recipe.
     is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
+    # if more than one list them and show what recipes they can eat, to the user choose one
     if len(is_someone_allergic) > 1:
         allowed = []
         print(f'There are {len(is_someone_allergic)} kids allergic to this recipe')
@@ -112,6 +116,7 @@ def daily_menu():
                 print(f"Must be prepared {new_recipe['quantity']} rations of {new_recipe['name']}")
             else:
                 print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
+    # if there is one, show him and the recipes that their can eat to the user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
         print('There is a kid allergic to this recipe')
@@ -136,15 +141,19 @@ def retrive_data_choice():
     Give the user the chance to rectrieve data from kids or recipes
     """
     print(txt.retrieve_data)
-    choice = input('Your choice:\n')
-    if choice.upper() == 'K':
-        print(txt.retrieve_users)
-        select = input('Your chioce:\n')
-        retrieve_kids_data(select)
-    elif choice.upper() == 'R':
-        print(txt.retrieve_recipes)
-        select = input('Your choice:\n')
-        retrieve_recipe_data(select)
+    choice = None
+    while choice == None:
+        choice = input('Your choice:\n')
+        if choice.upper() == 'K':
+            print(txt.retrieve_users)
+            select = input('Your chioce:\n')
+            retrieve_kids_data(select)
+        elif choice.upper() == 'R':
+            print(txt.retrieve_recipes)
+            select = input('Your choice:\n')
+            retrieve_recipe_data(select)
+        else:
+            choice = None
 
 
 def retrieve_kids_data(select):
@@ -153,13 +162,13 @@ def retrieve_kids_data(select):
     """
     if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
         filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
-        # pprint(filter_list, sort_dicts=False)
         return filter_list
     elif select.upper() == 'ALL':
-        # pprint(ALL_KIDS)
         return ALL_KIDS
     else:
-        get_object_from_worksheet(select.upper(), 'kids')
+        kid = help.get_object_from_worksheet(select.upper(), ALL_KIDS)
+        pprint(kid)
+        return kid
 
 
 def retrieve_recipe_data(select):
@@ -167,43 +176,11 @@ def retrieve_recipe_data(select):
     Retrieve recipes data from database. One particular recipe or all of them
     """
     if select.upper() == 'ALL':
-        # pprint(ALL_RECIPES)
         return ALL_RECIPES
     else:
-        recipe = get_object_from_worksheet(select.upper(), 'recipes')
+        recipe = help.get_object_from_worksheet(select.upper(), ALL_RECIPES)
+        pprint(recipe)
         return recipe
-
-
-def get_object_from_worksheet(name, worksheet):
-    """
-    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
-    """   
-    ws = SH.worksheet(worksheet).get_all_records()
-    objt_list = []
-    for obj in ws:
-        if obj['name'].upper().find(name.upper()) != -1:
-            objt_list.append(obj)
-    if len(objt_list) < 1:
-        print('Data could not been found')
-        return False
-    elif len(objt_list) == 1:
-        print(objt_list[0])
-        return objt_list[0]
-    else:
-        print('There are more than 1 coincidence with that name')
-        for obj in objt_list:
-            if worksheet == 'kids':
-                print(f"{obj['name']} {obj['last_name']}- Id: {obj['id']}")
-            elif worksheet == 'recipes':
-                print(f"{obj['name']} with ingredients: {obj['ingredients']} - Id: {obj['id']}")
-        id = int(input("Choise one by Id:\n"))
-        selected_obj = help.get_data_from_id(id, ws)
-        if worksheet == 'kids':
-            print(f"{selected_obj['name']} {selected_obj['last_name']} selected")
-        elif worksheet == 'recipes':
-            print(f"{selected_obj['name']} with id {selected_obj['id']} selected")
-        pprint(selected_obj)
-        return selected_obj
 
 
 def main():
@@ -212,7 +189,7 @@ def main():
     while True:
         inp = input('Your choice: \n')
         if inp.upper() == 'HELP':
-            print(help.help)
+            print(txt.help)
         elif inp.upper() == 'D':
             return daily_menu()
         elif inp.upper() == 'R':

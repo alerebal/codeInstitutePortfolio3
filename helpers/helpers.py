@@ -16,6 +16,24 @@ def validate_data(inp, regex):
             print(error)
 
 
+def get_object_from_worksheet(name, worksheet):
+    """
+    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
+    """   
+    obj_list = []
+    for obj in worksheet:
+        if obj['name'].upper().find(name.upper()) != -1:
+            obj_list.append(obj)
+    if len(obj_list) < 1:
+        print('Data could not been found')
+        return False
+    elif len(obj_list) == 1:
+        return obj_list[0]
+    else:
+        print('There are more than 1 coincidence with that name')
+        return obj_list
+        
+
 def get_data_from_id(id, data_list):
     """
     Get an id and looking for an object in a list of dictionaries
@@ -24,6 +42,13 @@ def get_data_from_id(id, data_list):
         if data['id'] == int(id):
             return data
     return False
+
+
+def print_kid(kid):
+    """
+    Print a kid data with their id, name and last name
+    """
+    print(f"Id: {kid['id']} - {kid['name']} {kid['last_name']}")
 
 
 def print_recipe(recipe):
