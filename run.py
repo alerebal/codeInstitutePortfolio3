@@ -33,6 +33,7 @@ only_letters_regex = "[a-zA-Z\s']+"
 age_regex = "[1-3]{1}"
 phone_number_regex = "\d{3}-\d{3}-\d{4}"
 list_regex = "(^[a-z,\s]+)*"
+only_numbers = "[0-9]+"
 
 
 def create_data_choice():
@@ -71,7 +72,9 @@ def create_kid():
     kid = Kid(name, last_name, age, tutor, contact, allergies)
     kid._get_id(int(last_id))
     KIDS.append_row(kid.kid_info())
+    help.print_splitter_underscore()
     print(kid.kid_description())
+    help.print_splitter_underscore()
 
 
 def create_recipe():
@@ -92,7 +95,9 @@ def create_recipe():
     recipe = Recipe(name, ingredients)
     recipe._get_id(int(last_id))
     RECIPES.append_row(recipe.recipe_info())
+    help.print_splitter_underscore()
     print(recipe.recipe_description())
+    help.print_splitter_underscore()
 
 
 def retrive_data_choice():
@@ -107,6 +112,7 @@ def retrive_data_choice():
             print(txt.retrieve_users)
             select = input('Your choice:\n')
             data = retrieve_kids_data(select)
+            help.print_splitter_underscore()
             if len(data) == 1:
                 help.print_kid_all_data(data[0])
             else:
@@ -116,6 +122,7 @@ def retrive_data_choice():
             print(txt.retrieve_recipes)
             select = input('Your choice:\n')
             data = retrieve_recipe_data(select)
+            help.print_splitter_underscore()
             if len(data) == 1:
                 help.print_recipe_all_data(data[0])
             else:
@@ -156,8 +163,11 @@ def daily_menu():
     """
     Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
     """
+    help.print_splitter_underscore()
     print(txt.daily_menu)
+    help.print_splitter_underscore()
     check_created_recipes()
+    help.print_splitter_underscore()
     # set to False the variables than are needed to run the app and give them a value inside a while loop
     kids = False
     while kids == False:
@@ -166,25 +176,29 @@ def daily_menu():
     print(f"Children selected: {group.upper()}")
     # show the user all the recipes for their to choose one
     ALL_RECIPES = RECIPES.get_all_records()
+    help.print_splitter_underscore()
     for recipe in ALL_RECIPES:
         help.print_recipe(recipe)
+    help.print_splitter_underscore()
     recipe = False
     while recipe == False:
-        id_input= input('Select a recipe by its id:\n')
+        id_input= int(help.validate_data('Select a recipe by its id:\n', only_numbers))
         recipe = help.get_data_from_id(id_input, ALL_RECIPES)
     # find out if there are allergic kids to the recipe.
     is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
     # if more than one list them and show what recipes they can eat, to the user choose one
     if len(is_someone_allergic) > 1:
         allowed = []
+        help.print_splitter_underscore()
         print(f'There are {len(is_someone_allergic)} kids allergic to this recipe')
-        print('Choose another recipe for them\n')
+        print('Choose another recipe for them')
         for kid in is_someone_allergic:
+            help.print_splitter_underscore()
             kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
-            print(f"{kid['name']} {kid['last_name']} can eat:")
+            print(f"{kid['name']} {kid['last_name']} can eat:\n")
             for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
-            print('')
+            print()
             new_recipe = False
             while new_recipe == False:
                 new_recipe_id = input('Choose the recipe by Id: \n')
@@ -194,32 +208,41 @@ def daily_menu():
             else:
                 new_recipe['quantity'] = 1
                 allowed.append(new_recipe)
+        help.print_splitter_underscore()
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
         for new_recipe in allowed:
             if new_recipe['quantity'] > 1:
                 print(f"Must be prepared {new_recipe['quantity']} rations of {new_recipe['name']}")
             else:
                 print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
+        help.print_splitter_underscore()
         change_states_recipes(group)
     # if there is one, show him and the recipes that their can eat to the user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
+        help.print_splitter_underscore()
         print('There is a kid allergic to this recipe')
-        print('Choose another recipe for they\n')
+        print('Choose another recipe for they')
         kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
-        print(f"{kid['name']} {kid['last_name']} can eat:")
+        help.print_splitter_underscore()
+        print(f"{kid['name']} {kid['last_name']} can eat:\n")
         for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
+        print()
         new_recipe = False
         while new_recipe == False:
             new_recipe_id = input('Choose the recipe by Id: \n')
             new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
+        help.print_splitter_underscore()
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}")
+        help.print_splitter_underscore()
         change_states_recipes(group)
     else:
+        help.print_splitter_underscore()
         print('There are no kids allergic to this recipe')
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
+        help.print_splitter_underscore()
         change_states_recipes(group)
 
 
@@ -238,7 +261,7 @@ def check_created_recipes():
                 print(f"The daily menu for the group {group['group'].upper()} is ALREADY assigned.")
             else:
                 print(f"The daily menu for the group {group['group'].upper()} is NOT assigned yet.")
-            
+    
 
 
 def change_states_recipes(group_assigned_menu):
@@ -256,9 +279,12 @@ def main():
     Main function where the app is running
     """
     while True:
+        help.print_splitter_underscore()
         print(txt.main_menu)
+        help.print_splitter_underscore()
         inp = input('Your choice: \n')
         if inp.upper() == 'HELP':
+            help.print_splitter_underscore()
             print(txt.help)
         elif inp.upper() == 'D':
             daily_menu()
@@ -271,4 +297,3 @@ def main():
 
 
 main()
-# check_created_recipes()
