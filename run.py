@@ -19,8 +19,6 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SH = GSPREAD_CLIENT.open('daily_menu_management')
 KIDS = SH.worksheet('kids')
 RECIPES = SH.worksheet('recipes')
-ALL_KIDS = KIDS.get_all_records()
-ALL_RECIPES = RECIPES.get_all_records()
 
 # regular expressions
 only_letters_regex = "[a-zA-Z\s']+"
@@ -56,6 +54,7 @@ def create_kid():
     contact = help.validate_data("Contact number(must have this format: 123-456-7890): \n", phone_number_regex)
     allergies = help.validate_data("Allergies(only lowercase letters, if more than one, separated by commas. If no allergies, just leave it blank): \n", list_regex)
     # get last kid id from worksheet, if there is no kids yet, I have to assign 0, if not, it give me an error
+    ALL_KIDS = KIDS.get_all_records()
     if len(ALL_KIDS) == 0:
         last_id = 0
     else:
@@ -76,6 +75,7 @@ def create_recipe():
     name = help.validate_data('Name(only letters): \n', only_letters_regex)
     ingredients = help.validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
     # get last food id from worksheet, if there is no food yet, I have to assign 0
+    ALL_RECIPES = RECIPES.get_all_records()
     if len(ALL_RECIPES) == 0:
         last_id = 0
     else:
@@ -121,6 +121,7 @@ def retrieve_kids_data(select):
     """
     Retrieve kids data from database. One particular kid, a group of kids by their color group or all the kids
     """
+    ALL_KIDS = KIDS.get_all_records()
     if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
         filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
         return filter_list
@@ -135,6 +136,7 @@ def retrieve_recipe_data(select):
     """
     Retrieve recipes data from database. One particular recipe or all of them
     """
+    ALL_RECIPES = RECIPES.get_all_records()
     if select.upper() == 'ALL':
         return ALL_RECIPES
     else:
@@ -153,6 +155,7 @@ def daily_menu():
         select = input('Select the children:\n')
         kids = retrieve_kids_data(select)
     # show the user all the recipes for their to choose one
+    ALL_RECIPES = RECIPES.get_all_records()
     for recipe in ALL_RECIPES:
         help.print_recipe(recipe)
     recipe = False
