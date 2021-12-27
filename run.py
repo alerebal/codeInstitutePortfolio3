@@ -20,6 +20,14 @@ SH = GSPREAD_CLIENT.open('daily_menu_management')
 KIDS = SH.worksheet('kids')
 RECIPES = SH.worksheet('recipes')
 
+# create a boolean variable for each group and all the children. I have to know if the menu for all or each one of the groups have been created. I will created a dictionary with the necessary information about them
+are_recipes_created = [
+    {'group': 'all', 'created': False},
+    {'group': 'green', 'created': False},
+    {'group': 'blue', 'created': False},
+    {'group': 'yellow', 'created': False}
+]
+
 # regular expressions
 only_letters_regex = "[a-zA-Z\s']+"
 age_regex = "[1-3]{1}"
@@ -152,8 +160,9 @@ def daily_menu():
     # set to False the variables than are needed to run the app and give them a value inside a while loop
     kids = False
     while kids == False:
-        select = input('Select the children:\n')
-        kids = retrieve_kids_data(select)
+        group = input('Select the children:\n')
+        kids = retrieve_kids_data(group)
+    print(f"Children selected: {group.upper()}")
     # show the user all the recipes for their to choose one
     ALL_RECIPES = RECIPES.get_all_records()
     for recipe in ALL_RECIPES:
@@ -210,8 +219,27 @@ def daily_menu():
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
 
 
-def main():
+def check_created_recipes():
+    """
+    Check if the recipes are created or not.
+    """
+    for group in are_recipes_created:
+        # If all the groups have a recipe assigned or the are an assigned recipe for all the children, the loop must be break, If not, the loop continue and shows if the are some group with or whitout an assigned recipe
+        if group['group'] == 'all':
+            if group['created'] == True:
+                print('The daily menu for all the children is ALREADY assigned')
+                break
+        else:
+            if group['created'] == True:
+                print(f"The daily menu for the group {group['group'].upper()} is ALREADY assigned.")
+            else:
+                print(f"The daily menu for the group {group['group'].upper()} is NOT assigned yet.")
 
+
+def main():
+    """
+    Main function where the app is running
+    """
     while True:
         print(txt.main_menu)
         inp = input('Your choice: \n')
@@ -227,4 +255,5 @@ def main():
             break
 
 
-main()
+# main()
+check_created_recipes()
