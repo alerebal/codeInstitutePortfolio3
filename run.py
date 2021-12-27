@@ -97,12 +97,22 @@ def retrive_data_choice():
         choice = input('Your choice:\n')
         if choice.upper() == 'K':
             print(txt.retrieve_users)
-            select = input('Your chioce:\n')
-            retrieve_kids_data(select)
+            select = input('Your choice:\n')
+            data = retrieve_kids_data(select)
+            if len(data) == 1:
+                help.print_kid_all_data(data[0])
+            else:
+                for kid in data:
+                    help.print_kid(kid)
         elif choice.upper() == 'R':
             print(txt.retrieve_recipes)
             select = input('Your choice:\n')
-            retrieve_recipe_data(select)
+            data = retrieve_recipe_data(select)
+            if len(data) == 1:
+                help.print_recipe_all_data(data[0])
+            else:
+                for recipe in data:
+                    help.print_recipe(recipe)
         else:
             choice = None
 
@@ -118,7 +128,6 @@ def retrieve_kids_data(select):
         return ALL_KIDS
     else:
         kid = help.get_object_from_worksheet(select.upper(), ALL_KIDS)
-        pprint(kid)
         return kid
 
 
@@ -130,7 +139,6 @@ def retrieve_recipe_data(select):
         return ALL_RECIPES
     else:
         recipe = help.get_object_from_worksheet(select.upper(), ALL_RECIPES)
-        pprint(recipe)
         return recipe
 
 
@@ -139,9 +147,9 @@ def daily_menu():
     Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
     """
     print(txt.daily_menu)
-    # set to None or False the variables than are needed to run the app and give them a value inside a while loop
-    kids = None
-    while kids == None:
+    # set to False the variables than are needed to run the app and give them a value inside a while loop
+    kids = False
+    while kids == False:
         select = input('Select the children:\n')
         kids = retrieve_kids_data(select)
     # show the user all the recipes for their to choose one
@@ -201,17 +209,19 @@ def daily_menu():
 
 def main():
 
-    print(txt.welcome)
     while True:
+        print(txt.main_menu)
         inp = input('Your choice: \n')
         if inp.upper() == 'HELP':
             print(txt.help)
         elif inp.upper() == 'D':
-            return daily_menu()
+            daily_menu()
         elif inp.upper() == 'R':
-            return retrive_data_choice()
+            retrive_data_choice()
         elif inp.upper() == 'C':
-            return create_data_choice()
+            create_data_choice()
+        elif inp.upper() == 'EXIT':
+            break
 
 
 main()

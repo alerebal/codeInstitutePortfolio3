@@ -18,7 +18,7 @@ def validate_data(inp, regex):
 
 def get_object_from_worksheet(name, worksheet):
     """
-    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. 
+    Get an object by their name in case that just one user exists with that name in the worksheet. Otherwise, the object id will be used. The object must be send into a list.
     """   
     obj_list = []
     for obj in worksheet:
@@ -28,10 +28,16 @@ def get_object_from_worksheet(name, worksheet):
         print('Data could not been found')
         return False
     elif len(obj_list) == 1:
-        return obj_list[0]
-    else:
-        print('There are more than 1 coincidence with that name')
         return obj_list
+    else:
+        print('There are more than 1 coincidence with that name. Choose one by Id')
+        for obj in obj_list:
+            print(f"Id: {obj['id']} - {obj['name']}")
+        selected_obj = False
+        while selected_obj == False:
+            obj_id = int(input('Your choise:\n'))
+            selected_obj = get_data_from_id(obj_id, obj_list)
+        return [selected_obj]
         
 
 def get_data_from_id(id, data_list):
@@ -46,9 +52,36 @@ def get_data_from_id(id, data_list):
 
 def print_kid(kid):
     """
-    Print a kid data with their id, name and last name
+    Print a kid data with their id, name, last name and group
     """
-    print(f"Id: {kid['id']} - {kid['name']} {kid['last_name']}")
+    print(f"Id: {kid['id']} - {kid['name']} {kid['last_name']} - Group: {kid['group']}")
+
+
+def print_kid_all_data(kid):
+    """
+    Print all the data of a kid, without kid_id
+    """
+    if kid['allergies'] != '':
+        # The indentation is rere, otherwise, it put space or tabs in the print statement
+        print(f"""
+Name: {kid['name']} 
+Last name: {kid['last_name']}
+Age: {kid['age']}
+Tutor: {kid['tutor']}
+Contact: {kid['contact_number']}
+Group: {kid['group']}
+Allergies: {kid['allergies']}     
+""")
+    else:
+        print(f"""
+Name: {kid['name']} 
+Last name: {kid['last_name']}
+Age: {kid['age']}
+Tutor: {kid['tutor']}
+Contact: {kid['contact_number']}
+Group: {kid['group']}
+Allergies: no allergies        
+""")
 
 
 def print_recipe(recipe):
@@ -56,6 +89,16 @@ def print_recipe(recipe):
     Print a recipe with its id and its name
     """
     print(f"Id: {recipe['id']} - {recipe['name']}.")
+
+
+def print_recipe_all_data(recipe):
+    """
+    Print all the data of a recipe, without recipe_id
+    """
+    print(f"""
+Recipe: {recipe['name']}
+Ingredients: {recipe['ingredients']}
+""")
 
 
 def find_kids_allergic_to_recipe(kids, ingredients):

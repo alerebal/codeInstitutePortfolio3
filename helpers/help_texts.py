@@ -1,15 +1,15 @@
-welcome = """
-With this app you can arrange a daily menu for the school.
+main_menu = """
 Press D to daily menu.
 Press R to retrieve data.
 Press C to create data.
 Press Help to get help or information about the app.
+Press Exit to exit
 """
 
 help = """
 Daily menu: 
-Choose a receipe from the list of recipes.
-Choose all the children or a group of them and check if any of them are allergic to any ingredient in the recipe.
+Choose all the children or a group of them.
+Choose a receipe from the list of recipes and check if any of them are allergic to any ingredient in the recipe.
 If no one is allergic, you can assign that recipe to the menu, otherwise, choose any recipe for allergic children from a specific list that includes all the recipes allowed for those children.
 Retrieve data:
 Get data about one specific child by their name or id, sorted by their group or all of the children.
@@ -26,8 +26,8 @@ If one or more kids are allergic to the recipe, a list of allowed recipes for ea
 """
 
 create_data = """
-Press K to create a kid data.
-Press R to create a recipe data.
+Press K to create data of a kid.
+Press R to create data of a recipe.
 """
 
 retrieve_data = """
