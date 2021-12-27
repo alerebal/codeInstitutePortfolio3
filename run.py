@@ -78,7 +78,7 @@ def create_recipe():
     """
     Create a recipe and add it to the database
     """
-    print('Create a new food')
+    print('Create a new recipe')
     # get the variables from the inputs
     name = help.validate_data('Name(only letters): \n', only_letters_regex)
     ingredients = help.validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
@@ -157,6 +157,7 @@ def daily_menu():
     Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
     """
     print(txt.daily_menu)
+    check_created_recipes()
     # set to False the variables than are needed to run the app and give them a value inside a while loop
     kids = False
     while kids == False:
@@ -199,6 +200,7 @@ def daily_menu():
                 print(f"Must be prepared {new_recipe['quantity']} rations of {new_recipe['name']}")
             else:
                 print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
+        change_states_recipes(group)
     # if there is one, show him and the recipes that their can eat to the user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
@@ -214,14 +216,16 @@ def daily_menu():
             new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}")
+        change_states_recipes(group)
     else:
         print('There are no kids allergic to this recipe')
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
+        change_states_recipes(group)
 
 
 def check_created_recipes():
     """
-    Check if the recipes are created or not.
+    Check if the daily menu have been created or not for any group or of all them.
     """
     for group in are_recipes_created:
         # If all the groups have a recipe assigned or the are an assigned recipe for all the children, the loop must be break, If not, the loop continue and shows if the are some group with or whitout an assigned recipe
@@ -234,6 +238,17 @@ def check_created_recipes():
                 print(f"The daily menu for the group {group['group'].upper()} is ALREADY assigned.")
             else:
                 print(f"The daily menu for the group {group['group'].upper()} is NOT assigned yet.")
+            
+
+
+def change_states_recipes(group_assigned_menu):
+    """"
+    Change the state of a menu when it is created for the user
+    """
+    for group in are_recipes_created:
+        if group['group'].upper() == group_assigned_menu.upper():
+            group['created'] = True
+    check_created_recipes()
 
 
 def main():
@@ -255,5 +270,5 @@ def main():
             break
 
 
-# main()
-check_created_recipes()
+main()
+# check_created_recipes()
