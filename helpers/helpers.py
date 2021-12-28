@@ -30,16 +30,16 @@ def get_object_from_worksheet(name, worksheet):
     elif len(obj_list) == 1:
         return obj_list
     else:
-        print_splitter_underscore()
-        print('There are more than 1 coincidence with that description. Choose one by Id')
-        print_splitter_underscore()
+        print_splitter_dash()
+        print('There are more than 1 coincidence with that description. Choose one by Id\n')
         for obj in obj_list:
             # If the object is a kid, can be more than one kid with the same name,so if the object has last name property show more information on screen
             if obj.get('last_name'):
                 print(f"Id: {obj['id']} - {obj['name']} {obj['last_name']} - Group: {obj['group']}")
             else:
                 print(f"Id: {obj['id']} - {obj['name']}")
-        print_splitter_underscore()
+        print()
+        print_splitter_dash()
         selected_obj = False
         while selected_obj == False:
             obj_id = int(validate_data('Your choice:\n', '[0-9]+'))
@@ -57,7 +57,7 @@ def get_data_from_id(id, data_list):
     return False
 
 
-def print_splitter_underscore():
+def print_splitter_dash():
     print('-' * 80)
 
 
