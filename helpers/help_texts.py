@@ -7,7 +7,8 @@ Press Help to get help or information about the app.
 Press Exit to exit
 """
 
-help = """
+help = """Help
+
 Daily menu: 
 Choose all the children or a group of them.
 Choose a receipe from the list of recipes and check if any of them are allergic
@@ -27,7 +28,8 @@ asking for different information about the child that is needed to create one.
 Create data of a recipe in the same way as to create a kid.
 """
 
-daily_menu = """
+daily_menu = """Daily menu:
+
 Choose a group of kids(enter BLUE, YELLOW or GREEN) or all of them(enter ALL).
 After that, choose a recipe by its ID from the list shown.
 If one or more kids are allergic to the recipe, a list of allowed recipes for 
@@ -35,24 +37,28 @@ each kid will be shown and you will be able to choice another recipe for those
 kids.
 """
 
-create_data = """
+create_data = """Create data:
+
 Press K to create data of a kid.
 Press R to create data of a recipe.
 """
 
-retrieve_data = """
+retrieve_data = """Retrieve data:
+
 Press K to retrieve kids data.
 Press R to retrieve recipes data. 
 """
 
-retrieve_users = """
+retrieve_users = """Retrieve kids data:
+
 If you want to get data of one particular kid enter their name(or an 
 approximation of it).
 If you want data about all the children press 'ALL'.
 Press 'BLUE', 'GREEN' or 'YELLOW' to get data of each group.
 """
 
-retrieve_recipes = """
+retrieve_recipes = """Retrieve recipes data:
+
 If you want to get a particular recipe enter its name(or an approximation
 of if).
 For all the recipes data press ALL.

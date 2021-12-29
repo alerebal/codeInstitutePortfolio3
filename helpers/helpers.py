@@ -58,6 +58,9 @@ def get_data_from_id(id, data_list):
 
 
 def print_splitter_dash():
+    """
+    Print a dashed splitter of 80 columns
+    """
     print('-' * 80)
 
 
@@ -110,6 +113,13 @@ def print_recipe_all_data(recipe):
 Recipe: {recipe['name']}
 Ingredients: {recipe['ingredients']}
 """)
+
+
+def print_continue_option():
+    """
+    Print a continue option to add to the bottom of the data show to the user
+    """
+    return input('Press enter to continue\n')
 
 
 def find_kids_allergic_to_recipe(kids, ingredients):

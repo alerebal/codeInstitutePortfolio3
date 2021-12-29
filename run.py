@@ -79,6 +79,7 @@ def create_kid():
     print()
     print(kid.kid_description())
     print()
+    help.print_continue_option()
 
 
 def create_recipe():
@@ -104,6 +105,7 @@ def create_recipe():
     print()
     print(recipe.recipe_description())
     print()
+    help.print_continue_option()
 
 
 def retrive_data_choice():
@@ -132,6 +134,7 @@ def retrive_data_choice():
                 for kid in data:
                     help.print_kid(kid)
                 print()
+            help.print_continue_option()
         elif choice.upper() == 'R':
             print(txt.retrieve_recipes)
             help.print_splitter_dash()
@@ -147,6 +150,7 @@ def retrive_data_choice():
                 for recipe in data:
                     help.print_recipe(recipe)
                 print()
+            help.print_continue_option()
         else:
             choice = False
 
@@ -244,6 +248,7 @@ def daily_menu():
         print()
         help.print_splitter_dash()
         change_states_recipes(group)
+        help.print_continue_option()
     # if there is one, show him and the recipes that their can eat to the user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
@@ -269,6 +274,7 @@ def daily_menu():
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
         help.print_splitter_dash()
         change_states_recipes(group)
+        help.print_continue_option()
     else:
         help.print_splitter_dash()
         print()
@@ -276,6 +282,7 @@ def daily_menu():
         print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}\n")
         help.print_splitter_dash()
         change_states_recipes(group)
+        help.print_continue_option()
 
 
 def check_created_recipes():
@@ -319,6 +326,7 @@ def main():
         if inp.upper() == 'HELP':
             help.print_splitter_dash()
             print(txt.help)
+            help.print_continue_option()
         elif inp.upper() == 'D':
             daily_menu()
         elif inp.upper() == 'R':
