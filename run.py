@@ -1,10 +1,14 @@
 import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
+import json
+import datetime
 from models.Kid import Kid
 from models.Recipe import Recipe
+from models.Daily_menu import Daily_menu
 import helpers.helpers as help
 from helpers import help_texts as txt
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -19,6 +23,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SH = GSPREAD_CLIENT.open('daily_menu_management')
 KIDS = SH.worksheet('kids')
 RECIPES = SH.worksheet('recipes')
+MENU = SH.worksheet('menu')
 
 # create a boolean variable for each group and all the children. I have to know if the menu for all or each one of the groups have been created. I will created a dictionary with the necessary information about them
 are_recipes_created = [
@@ -214,6 +219,7 @@ def daily_menu():
     is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
     # if more than one list them and show what recipes they can eat, to the user choose one
     if len(is_someone_allergic) > 1:
+        quantity = len(kids) - len(is_someone_allergic)
         allowed = []
         help.print_splitter_dash()
         print()
@@ -246,12 +252,18 @@ def daily_menu():
             else:
                 print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
         print()
+
+        date = datetime.datetime.now()  
+        menu_data = Daily_menu(date, new_recipe, quantity, allowed)
+        menu_data._get_properties()
         help.print_splitter_dash()
+
         change_states_recipes(group)
         help.print_continue_option()
     # if there is one, show him and the recipes that their can eat to the user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
+        quantity = len(kids) - 1
         help.print_splitter_dash()
         print()
         print('There is a kid allergic to this recipe')
@@ -270,16 +282,27 @@ def daily_menu():
         print(f"The recipe {new_recipe['name']} has been selected for {kid['name']} {kid['last_name']}\n")
         help.print_splitter_dash()
         print()
-        print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
+        print(f"Must be prepared {quantity} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
+
+        date = datetime.datetime.now()  
+        menu_data = Daily_menu(date, recipe, quantity, [new_recipe])
+        menu_data._get_properties()
+
         help.print_splitter_dash()
         change_states_recipes(group)
         help.print_continue_option()
     else:
         help.print_splitter_dash()
+        quantity = len(kids)
         print()
         print('There are no kids allergic to this recipe')
-        print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}\n")
+        print(f"Must be prepared {quantity} rations of {recipe['name']}\n")
+
+        date = datetime.datetime.now()  
+        menu_data = Daily_menu(date, recipe, quantity)
+        menu_data._get_properties()
+
         help.print_splitter_dash()
         change_states_recipes(group)
         help.print_continue_option()
@@ -309,6 +332,8 @@ def change_states_recipes(group_assigned_menu):
     for group in are_recipes_created:
         if group['group'].upper() == group_assigned_menu.upper():
             group['created'] = True
+    # date = datetime.datetime.now()
+    # MENU.append_row([date.strftime('%b-%a-%d'), group_assigned_menu.upper(), json.dumps(menu_data)])
     print()
     check_created_recipes()
     print()
@@ -338,3 +363,7 @@ def main():
 
 
 main()
+
+
+
+
