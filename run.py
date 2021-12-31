@@ -241,9 +241,11 @@ def daily_menu():
                 new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
             if new_recipe in allowed:
                 new_recipe['quantity'] += 1
+                new_recipe['kids_id'].append(kid['id'])
             else:
                 new_recipe['quantity'] = 1
                 allowed.append(new_recipe)
+                new_recipe['kids_id'] = [kid['id']]
             print()
             print(f"The recipe {new_recipe['name']} has been selected for {kid['name']} {kid['last_name']}\n")
         help.print_splitter_dash()
@@ -285,6 +287,8 @@ def daily_menu():
         print()
         print(f"Must be prepared {quantity} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
+        # add the kid id property to the recipe
+        new_recipe['kids_id'] = kid['id']
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, recipe, quantity, [new_recipe])._get_properties()
         MENU.append_row(menu_data)

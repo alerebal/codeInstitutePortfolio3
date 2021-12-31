@@ -19,14 +19,16 @@ class Daily_menu:
             self.daily_menu['allergic_recipes'] = []
             self.daily_menu['allergic_recipes'].append({
                     'recipe_id': self.allergics[0]['id'],
-                    'quantity': 1
+                    'quantity': 1,
+                    'kids_id': self.allergics[0]['kids_id']
                 })
         if len(self.allergics) > 1:
             self.daily_menu['allergic_recipes'] = []
             for recipe in self.allergics:
                 self.daily_menu['allergic_recipes'].append({
                     'recipe_id': recipe['id'],
-                    'quantity': recipe['quantity']
+                    'quantity': recipe['quantity'],
+                    'kids_id': recipe['kids_id']
                 })
         # return the data to add to the worksheet. Convert the object to string
         return [self.date, self.group, json.dumps(self.daily_menu)]
