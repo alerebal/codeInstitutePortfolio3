@@ -198,6 +198,9 @@ def daily_menu():
     check_created_recipes()
     print()
     help.print_splitter_dash()
+    # get the date and format it
+    date_raw = datetime.datetime.now() 
+    date = date_raw.strftime('%b-%a-%d')
     # set to False the variables than are needed to run the app and give them a value inside a while loop
     kids = False
     while kids == False:
@@ -252,12 +255,10 @@ def daily_menu():
             else:
                 print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
         print()
-
-        date = datetime.datetime.now()  
-        menu_data = Daily_menu(date, new_recipe, quantity, allowed)
-        menu_data._get_properties()
+        # create an instance an add the data to the worksheet
+        menu_data = Daily_menu(date, group, new_recipe, quantity, allowed)._get_properties()
+        MENU.append_row(menu_data)
         help.print_splitter_dash()
-
         change_states_recipes(group)
         help.print_continue_option()
     # if there is one, show him and the recipes that their can eat to the user to choose one
@@ -266,7 +267,7 @@ def daily_menu():
         quantity = len(kids) - 1
         help.print_splitter_dash()
         print()
-        print('There is a kid allergic to this recipe')
+        print('There is 1 kid allergic to this recipe')
         print('Choose another recipe for they\n')
         kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
         help.print_splitter_dash()
@@ -284,11 +285,9 @@ def daily_menu():
         print()
         print(f"Must be prepared {quantity} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
-
-        date = datetime.datetime.now()  
-        menu_data = Daily_menu(date, recipe, quantity, [new_recipe])
-        menu_data._get_properties()
-
+        # create an instance an add the data to the worksheet
+        menu_data = Daily_menu(date, group, recipe, quantity, [new_recipe])._get_properties()
+        MENU.append_row(menu_data)
         help.print_splitter_dash()
         change_states_recipes(group)
         help.print_continue_option()
@@ -298,11 +297,9 @@ def daily_menu():
         print()
         print('There are no kids allergic to this recipe')
         print(f"Must be prepared {quantity} rations of {recipe['name']}\n")
-
-        date = datetime.datetime.now()  
-        menu_data = Daily_menu(date, recipe, quantity)
-        menu_data._get_properties()
-
+        # create an instance an add the data to the worksheet
+        menu_data = Daily_menu(date, group, recipe, quantity)._get_properties()
+        MENU.append_row(menu_data)
         help.print_splitter_dash()
         change_states_recipes(group)
         help.print_continue_option()
