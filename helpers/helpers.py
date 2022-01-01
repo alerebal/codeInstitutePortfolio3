@@ -1,3 +1,4 @@
+from pprint import pprint
 import re
 import datetime
 
@@ -151,6 +152,28 @@ def recipes_for_an_allergic_kid(kid, recipes):
         if not recipe.get('not allowed'):
             allow_recipes.append(recipe)
     return allow_recipes
+
+
+def print_menu(menus, list_of_recipes, list_of_kids):
+    for menu in menus:
+        main_recipe = get_data_from_id(menu['daily_menu']['main_recipe']['recipe_id'], list_of_recipes)
+        quantity = menu['daily_menu']['main_recipe']['quantity']
+        group = menu['group'].upper()
+        print()
+        print(f"Group: {group}\n")
+        print(f"Main recipe: {main_recipe['name']} - Rations: {quantity}\n")
+        if 'allergic_recipes' in menu['daily_menu'].keys():
+            allergic_recipes = menu['daily_menu']['allergic_recipes']
+            for recipe in allergic_recipes:
+                allergic_recipe = get_data_from_id(recipe['recipe_id'], list_of_recipes)
+                quantity = recipe['quantity']
+                kids_id = recipe['kids_id']
+                print(f"Allergic recipe: {allergic_recipe['name']} - Rations: {quantity} - For:\n")
+                for id in kids_id:
+                    kid = get_data_from_id(id, list_of_kids)
+                    print(f"{kid['name']} {kid['last_name']}")
+                print()
+        print_splitter_dash()
 
 
 def get_date():
