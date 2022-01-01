@@ -1,5 +1,5 @@
 import re
-
+import datetime
 
 def validate_data(inp, regex):
     """
@@ -151,3 +151,11 @@ def recipes_for_an_allergic_kid(kid, recipes):
         if not recipe.get('not allowed'):
             allow_recipes.append(recipe)
     return allow_recipes
+
+
+def get_date():
+    """
+    Get the date and give it a format month-day-number of day (Dec-Mon-23)
+    """
+    date_raw = datetime.datetime.now() 
+    return date_raw.strftime('%b-%a-%d')
