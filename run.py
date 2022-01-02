@@ -276,7 +276,7 @@ def daily_menu():
         print(f"Must be prepared {quantity} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
         # add the kid id property to the recipe
-        new_recipe['kids_id'] = kid['id']
+        new_recipe['kids_id'] = [kid['id']]
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, recipe, quantity, [new_recipe])._get_properties()
         MENU.append_row(menu_data)
@@ -285,7 +285,7 @@ def daily_menu():
         help.print_splitter_dash()
         quantity = len(kids)
         print()
-        print('There are no kids allergic to this recipe')
+        print('There are no kids allergic to this recipe\n')
         print(f"Must be prepared {quantity} rations of {recipe['name']}\n")
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, recipe, quantity)._get_properties()
@@ -298,24 +298,58 @@ def check_created_menus():
     Check if the daily menu have been created or not for any group or of all them.
     """
     ALL_MENUS = MENU.get_all_records()
+    ALL_RECIPES = RECIPES.get_all_records()
+    ALL_KIDS = KIDS.get_all_records()
     date = help.get_date()
-    are_menu_created = []
     # check if a menu for the day is already created
+    are_menu_created = []
     for menu in ALL_MENUS:
         if menu['date'] == date:
             are_menu_created.append({
                 'group': menu['group'],
                 'daily_menu': json.loads(menu['menu'])
             })
+    # if there is no a menu
     if len(are_menu_created) == 0:
         print('There is no daily menu created yet')
-    created_groups = [group['group'].upper() for group in are_menu_created]
-    if 'ALL' in created_groups:
-        print('The daily menu for all the children is ALREADY created')
+    # if one or more menu already exists
     else:
-        for group in are_menu_created:
-            print(f"The daily menu for the group {group['group'].upper()} is ALREADY created.")
-    
+        created_groups = [group['group'].upper() for group in are_menu_created]
+        if 'ALL' in created_groups:
+            print('The daily menu for all the children is ALREADY created\n')
+            while True:
+                show_menu = input('Press S to see the menu, C to create a new menu, M to go back to main menu\n')
+                if show_menu.upper() == 'S':
+                    menu = [all for all in are_menu_created if all['group'].upper() == 'ALL']
+                    help.print_menu(menu, ALL_RECIPES, ALL_KIDS)
+                    create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
+                    if create_or_main.upper() == 'C':
+                        break
+                    else:
+                        main()
+                elif show_menu.upper() == 'C':
+                    break
+                elif show_menu.upper() == 'M':
+                    main()
+        else:
+            for group in are_menu_created:
+                print(f"The daily menu for the group {group['group'].upper()} is ALREADY created.")
+            print()
+            while True:
+                show_menu = input('Press S to see the menu, C to create a new menu, M to go back to main menu\n')
+                if show_menu.upper() == 'S':
+                    menus = [group for group in are_menu_created if group['group'].upper() != 'ALL']
+                    help.print_menu(menus, ALL_RECIPES, ALL_KIDS)
+                    create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
+                    if create_or_main.upper() == 'C':
+                        break
+                    else:
+                        main()
+                elif show_menu.upper() == 'C':
+                    break
+                elif show_menu.upper() == 'M':
+                    main()
+
 
 def main():
     """

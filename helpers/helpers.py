@@ -159,6 +159,7 @@ def print_menu(menus, list_of_recipes, list_of_kids):
         main_recipe = get_data_from_id(menu['daily_menu']['main_recipe']['recipe_id'], list_of_recipes)
         quantity = menu['daily_menu']['main_recipe']['quantity']
         group = menu['group'].upper()
+        print_splitter_dash()
         print()
         print(f"Group: {group}\n")
         print(f"Main recipe: {main_recipe['name']} - Rations: {quantity}\n")
@@ -173,7 +174,6 @@ def print_menu(menus, list_of_recipes, list_of_kids):
                     kid = get_data_from_id(id, list_of_kids)
                     print(f"{kid['name']} {kid['last_name']}")
                 print()
-        print_splitter_dash()
 
 
 def get_date():
