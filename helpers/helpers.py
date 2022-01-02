@@ -182,3 +182,14 @@ def get_date():
     """
     date_raw = datetime.datetime.now() 
     return date_raw.strftime('%b-%a-%d')
+
+
+def update_menu(worksheet, date, data_to_update, group):
+    """
+    Update a menu in the worksheet. Date is the string to looking for(we are looking for a specific date), data to update is what we want to modificate and group is essential because we can have more than menu for a specific date
+    """
+    menus = worksheet.findall(date)
+    for menu in menus:
+        row_number = menu.row
+        if group.upper() in worksheet.row_values(row_number)[1].upper():
+            worksheet.update_cell(row_number, 3, data_to_update)
