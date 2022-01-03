@@ -193,3 +193,12 @@ def update_menu(worksheet, date, data_to_update, group):
         row_number = menu.row
         if group.upper() in worksheet.row_values(row_number)[1].upper():
             worksheet.update_cell(row_number, 3, data_to_update)
+
+
+def is_menu_created(created_menus, group):
+    """
+    Returns True if the menu for a group of kids already exists.
+    """
+    for menu in created_menus:
+        if menu['group'].upper() == group.upper():
+            return True

@@ -31,7 +31,6 @@ phone_number_regex = "\d{3}-\d{3}-\d{4}"
 list_regex = "(^[a-z,\s]+)*"
 only_numbers = "[0-9]+"
 
-
 def create_data_choice():
     """
     Give the user the chance to create kid or recipe data and save it in the worksheet
@@ -186,7 +185,7 @@ def daily_menu():
     print(txt.daily_menu)
     help.print_splitter_dash()
     print()
-    check_created_menus()
+    are_menu_created = check_created_menus()
     print()
     help.print_splitter_dash()
     # get the date
@@ -197,6 +196,16 @@ def daily_menu():
         group = input('Select the children:\n')
         kids = retrieve_kids_data(group)
         help.print_splitter_dash()
+    is_menu_created = help.is_menu_created(are_menu_created, group)
+    if is_menu_created:
+        print(f"The daily menu for the group {group} is already created\n")
+        while True:
+            update = input("Do you want to update it? Y/N\n")
+            if update.upper() == 'Y':
+                break
+            elif update.upper() == 'N':
+                daily_menu()
+                break
     print(f"Children selected: {group.upper()}\n")
     # show the user all the recipes for their to choose one
     ALL_RECIPES = RECIPES.get_all_records()
@@ -249,7 +258,10 @@ def daily_menu():
         print()
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, new_recipe, quantity, allowed)._get_properties()
-        MENU.append_row(menu_data)
+        if is_menu_created:
+            help.update_menu(MENU, date, menu_data[2], group)
+        else:
+            MENU.append_row(menu_data)
         help.print_continue_option()
     # if there is one, show him and the recipes that their can eat to the user to choose one
     elif len(is_someone_allergic) == 1:
@@ -279,7 +291,10 @@ def daily_menu():
         new_recipe['kids_id'] = [kid['id']]
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, recipe, quantity, [new_recipe])._get_properties()
-        MENU.append_row(menu_data)
+        if is_menu_created:
+            help.update_menu(MENU, date, menu_data[2], group)
+        else:
+            MENU.append_row(menu_data)
         help.print_continue_option()
     else:
         help.print_splitter_dash()
@@ -289,7 +304,10 @@ def daily_menu():
         print(f"Must be prepared {quantity} rations of {recipe['name']}\n")
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, recipe, quantity)._get_properties()
-        MENU.append_row(menu_data)
+        if is_menu_created:
+            help.update_menu(MENU, date, menu_data[2], group)
+        else:
+            MENU.append_row(menu_data)
         help.print_continue_option()
 
 
@@ -349,6 +367,7 @@ def check_created_menus():
                     break
                 elif show_menu.upper() == 'M':
                     main()
+    return are_menu_created
 
 
 def main():
@@ -375,7 +394,3 @@ def main():
 
 
 main()
-
-
-
-
