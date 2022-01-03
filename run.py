@@ -186,6 +186,9 @@ def daily_menu():
     help.print_splitter_dash()
     print()
     are_menu_created = check_created_menus()
+    # if None is received that means that I need to go to main menu, but if I go here to main menu, it will open that menu more than once and to go out of the proggram the user needs to press exit more than once. I must return None here because of that.
+    if are_menu_created == None:
+        return None
     print()
     help.print_splitter_dash()
     # get the date
@@ -309,6 +312,7 @@ def daily_menu():
         else:
             MENU.append_row(menu_data)
         help.print_continue_option()
+    return main()
 
 
 def check_created_menus():
@@ -334,21 +338,22 @@ def check_created_menus():
     else:
         created_groups = [group['group'].upper() for group in are_menu_created]
         if 'ALL' in created_groups:
-            print('The daily menu for all the children is ALREADY created\n')
+            print('The daily menu for ALL the children is ALREADY created\n')
             while True:
                 show_menu = input('Press S to see the menu, C to create a new menu, M to go back to main menu\n')
                 if show_menu.upper() == 'S':
                     menu = [all for all in are_menu_created if all['group'].upper() == 'ALL']
                     help.print_menu(menu, ALL_RECIPES, ALL_KIDS)
-                    create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
-                    if create_or_main.upper() == 'C':
-                        break
-                    else:
-                        main()
+                    # create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
+                    # if create_or_main.upper() == 'C':
+                    #     return are_menu_created
+                    # else:
+                    #     return main()
+                    help.print_continue_option()
                 elif show_menu.upper() == 'C':
-                    break
+                    return are_menu_created
                 elif show_menu.upper() == 'M':
-                    main()
+                    return main()
         else:
             for group in are_menu_created:
                 print(f"The daily menu for the group {group['group'].upper()} is ALREADY created.")
@@ -358,16 +363,17 @@ def check_created_menus():
                 if show_menu.upper() == 'S':
                     menus = [group for group in are_menu_created if group['group'].upper() != 'ALL']
                     help.print_menu(menus, ALL_RECIPES, ALL_KIDS)
-                    create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
-                    if create_or_main.upper() == 'C':
-                        break
-                    else:
-                        main()
+                    # create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
+                    # if create_or_main.upper() == 'C':
+                    #     return are_menu_created
+                    # else:
+                    #     return main()
+                    help.print_continue_option()
                 elif show_menu.upper() == 'C':
-                    break
+                    return are_menu_created
                 elif show_menu.upper() == 'M':
-                    main()
-    return are_menu_created
+                    return main()
+    return None
 
 
 def main():
@@ -384,7 +390,7 @@ def main():
             print(txt.help)
             help.print_continue_option()
         elif inp.upper() == 'D':
-            daily_menu()
+            return daily_menu()
         elif inp.upper() == 'R':
             retrive_data_choice()
         elif inp.upper() == 'C':
