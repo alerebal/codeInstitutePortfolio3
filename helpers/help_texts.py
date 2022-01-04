@@ -1,3 +1,15 @@
+welcome = """Welcome to Daily Menu APP
+
+Create a daily menu for your primary school.
+Keep a record, create, retrieve or upload the data. 
+The data you can recording are:
+Daily menu: a main recipe for all the children or a group of them.
+In case someone were allergic to the main recipe, one recipe for they.
+Kids: Their name, age and group who they belong, tutor details and any allergy 
+if they have one.
+Recipes: name and ingredients.
+"""
+
 main_menu = """Main menu
 
 Press D to daily menu.
@@ -13,9 +25,10 @@ Daily menu:
 Choose all the children or a group of them.
 Choose a receipe from the list of recipes and check if any of them are allergic
 to any ingredient in the recipe.
-If no one is allergic, you can assign that recipe to the menu, otherwise, 
+If no one is allergic, the recipe will be assigned to the menu, otherwise, 
 choose any recipe for allergic children from a specific list that includes all
 the recipes allowed for those children.
+The menu for all children always prevails over the groups.
 
 Retrieve data:
 Get data about one specific child by their name or id, sorted by their group or

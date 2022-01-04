@@ -7,7 +7,7 @@ def validate_data(inp, regex):
     Check if data input have the correct format
     """
     while True:
-        data_to_check = input(inp)
+        data_to_check = input(inp).strip()
         try:
             if re.fullmatch(regex, data_to_check):
                 return data_to_check

@@ -1,6 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
-from pprint import pprint
+import re
 import json
 from models.Kid import Kid
 from models.Recipe import Recipe
@@ -29,7 +29,8 @@ only_letters_regex = "[a-zA-Z\s']+"
 age_regex = "[1-3]{1}"
 phone_number_regex = "\d{3}-\d{3}-\d{4}"
 list_regex = "(^[a-z,\s]+)*"
-only_numbers = "[0-9]+"
+only_numbers_regex = "[0-9]+"
+group_of_kids_regex = re.compile("(green|blue|yellow|all)", re.I)
 
 def create_data_choice():
     """
@@ -119,7 +120,7 @@ def retrive_data_choice():
             help.print_splitter_dash()
             data = False
             while data == False:
-                select = input('Your choice:\n')
+                select = help.validate_data('Your choice(only letters):\n', only_letters_regex)
                 data = retrieve_kids_data(select)
                 help.print_splitter_dash()
             if len(data) == 1:
@@ -135,7 +136,7 @@ def retrive_data_choice():
             help.print_splitter_dash()
             data = False
             while data == False:
-                select = input('Your choice:\n')
+                select = help.validate_data('Your choice(only letters):\n', only_letters_regex)
                 data = retrieve_recipe_data(select)
                 help.print_splitter_dash()
             if len(data) == 1:
@@ -196,7 +197,7 @@ def daily_menu():
     # set to False the variables than are needed to run the app and give them a value inside a while loop
     kids = False
     while kids == False:
-        group = input('Select the children:\n')
+        group = help.validate_data('Select the children:\n', group_of_kids_regex)
         kids = retrieve_kids_data(group)
         help.print_splitter_dash()
     is_menu_created = help.is_menu_created(are_menu_created, group)
@@ -207,8 +208,7 @@ def daily_menu():
             if update.upper() == 'Y':
                 break
             elif update.upper() == 'N':
-                daily_menu()
-                break
+                return daily_menu()
     print(f"Children selected: {group.upper()}\n")
     # show the user all the recipes for their to choose one
     ALL_RECIPES = RECIPES.get_all_records()
@@ -218,7 +218,7 @@ def daily_menu():
     help.print_splitter_dash()
     recipe = False
     while recipe == False:
-        id_input= int(help.validate_data('Select a recipe by its id:\n', only_numbers))
+        id_input= int(help.validate_data('Select a recipe by its id:\n', only_numbers_regex))
         recipe = help.get_data_from_id(id_input, ALL_RECIPES)
     # find out if there are allergic kids to the recipe.
     is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
@@ -239,7 +239,7 @@ def daily_menu():
             print()
             new_recipe = False
             while new_recipe == False:
-                new_recipe_id = input('Choose the recipe by Id: \n')
+                new_recipe_id = help.validate_data('Choose the recipe by Id: \n', only_numbers_regex)
                 new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
             if new_recipe in allowed:
                 new_recipe['quantity'] += 1
@@ -282,7 +282,7 @@ def daily_menu():
         print()
         new_recipe = False
         while new_recipe == False:
-            new_recipe_id = input('Choose the recipe by Id: \n')
+            new_recipe_id = help.validate_data('Choose the recipe by Id: \n', only_numbers_regex)
             new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
         print()
         print(f"The recipe {new_recipe['name']} has been selected for {kid['name']} {kid['last_name']}\n")
@@ -333,23 +333,23 @@ def check_created_menus():
             })
     # if there is no a menu
     if len(are_menu_created) == 0:
-        print('There is no daily menu created yet')
+        print('There is no daily menu created yet\n')
+        while True:
+            create_or_main = help.validate_data('Press C to create a new menu or any key to go to main menu\n', only_letters_regex)
+            if create_or_main.upper() == 'C':
+                return are_menu_created
+            else:
+                return main()
     # if one or more menu already exists
     else:
         created_groups = [group['group'].upper() for group in are_menu_created]
         if 'ALL' in created_groups:
             print('The daily menu for ALL the children is ALREADY created\n')
             while True:
-                show_menu = input('Press S to see the menu, C to create a new menu, M to go back to main menu\n')
+                show_menu = help.validate_data('Press S to see the menu, C to create a new menu, M to go back to main menu\n', only_letters_regex)
                 if show_menu.upper() == 'S':
                     menu = [all for all in are_menu_created if all['group'].upper() == 'ALL']
                     help.print_menu(menu, ALL_RECIPES, ALL_KIDS)
-                    # create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
-                    # if create_or_main.upper() == 'C':
-                    #     return are_menu_created
-                    # else:
-                    #     return main()
-                    help.print_continue_option()
                 elif show_menu.upper() == 'C':
                     return are_menu_created
                 elif show_menu.upper() == 'M':
@@ -359,16 +359,10 @@ def check_created_menus():
                 print(f"The daily menu for the group {group['group'].upper()} is ALREADY created.")
             print()
             while True:
-                show_menu = input('Press S to see the menu, C to create a new menu, M to go back to main menu\n')
+                show_menu = help.validate_data('Press S to see the menu, C to create a new menu, M to go back to main menu\n', only_letters_regex)
                 if show_menu.upper() == 'S':
                     menus = [group for group in are_menu_created if group['group'].upper() != 'ALL']
                     help.print_menu(menus, ALL_RECIPES, ALL_KIDS)
-                    # create_or_main = input('Press C to create a new menu or any key to go to main menu\n')
-                    # if create_or_main.upper() == 'C':
-                    #     return are_menu_created
-                    # else:
-                    #     return main()
-                    help.print_continue_option()
                 elif show_menu.upper() == 'C':
                     return are_menu_created
                 elif show_menu.upper() == 'M':
@@ -384,7 +378,7 @@ def main():
         help.print_splitter_dash()
         print(txt.main_menu)
         help.print_splitter_dash()
-        inp = input('Your choice: \n')
+        inp = help.validate_data('Your choice:\n', only_letters_regex)
         if inp.upper() == 'HELP':
             help.print_splitter_dash()
             print(txt.help)
@@ -398,5 +392,5 @@ def main():
         elif inp.upper() == 'EXIT':
             break
 
-
+print(txt.welcome)
 main()
