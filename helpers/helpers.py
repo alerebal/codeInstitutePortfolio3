@@ -165,7 +165,7 @@ def print_menu(menus, list_of_recipes, list_of_kids):
         if 'allergic_recipes' in menu['daily_menu'].keys():
             allergic_recipes = menu['daily_menu']['allergic_recipes']
             for recipe in allergic_recipes:
-                allergic_recipe = get_data_from_id(recipe['recipe_id'], list_of_recipes)
+                allergic_recipe = get_data_from_id(recipe['id'], list_of_recipes)
                 quantity = recipe['quantity']
                 kids_id = recipe['kids_id']
                 print(f"Allergic recipe: {allergic_recipe['name']} - Rations: {quantity} - For:\n")

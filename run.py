@@ -289,8 +289,9 @@ def daily_menu():
         print()
         print(f"Must be prepared {quantity} rations of {recipe['name']}")
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
-        # add the kid id property to the recipe
+        # add the kid id and quantity properties to the recipe
         new_recipe['kids_id'] = [kid['id']]
+        new_recipe['quantity'] = 1
         # create an instance an add the data to the worksheet
         menu_data = Daily_menu(date, group, recipe, quantity, [new_recipe])._get_properties()
         if is_menu_created:
