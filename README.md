@@ -84,3 +84,25 @@ From the daily menu panel the user can see which are the menus that have been al
 The user can update a menu if it is already created and the old menu will be replaced by the new one.
 
 ![Image](images/readme/update_menu.png)
+
+### Retrieve data
+
+The user can retrieve data about kids grouping them by group, all of them or just one kid and data about one recipe or all of them as well.
+
+![Image](images/readme/retrieve_data_1.png)
+
+In case there is a coincidence in the params of search, the user must choice an option choosing it by id.
+
+![Image](images/readme/object_coincidence_chosen.png)
+
+### Create data
+
+The user can create kid and recipes data. The app will guide them asking for all the data needed to create each one of them.
+
+Every field to fill has its validator and an alert will be show to user in case they enter the wrong data.
+
+![Image](images/readme/enter_incorrect_data.png)
+
+When the data is saved a message is shown to the user
+
+![Image](images/readme/create_data_1.png)
