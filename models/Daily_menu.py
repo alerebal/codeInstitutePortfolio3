@@ -15,14 +15,14 @@ class Daily_menu:
             'recipe_id': self.main_recipe['id'],
             'quantity': self.qty
         }}
-        if len(self.allergics) == 1:
+        if len(self.allergics[0]['kids_id']) == 1:
             self.daily_menu['allergic_recipes'] = []
             self.daily_menu['allergic_recipes'].append({
                     'recipe_id': self.allergics[0]['id'],
                     'quantity': 1,
                     'kids_id': self.allergics[0]['kids_id']
                 })
-        if len(self.allergics) > 1:
+        if len(self.allergics[0]['kids_id']) > 1:
             self.daily_menu['allergic_recipes'] = []
             for recipe in self.allergics:
                 self.daily_menu['allergic_recipes'].append({

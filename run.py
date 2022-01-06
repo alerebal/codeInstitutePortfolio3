@@ -8,7 +8,6 @@ from models.Daily_menu import Daily_menu
 import helpers.helpers as help
 from helpers import help_texts as txt
 
-
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -260,7 +259,7 @@ def daily_menu():
                 print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
         print()
         # create an instance an add the data to the worksheet
-        menu_data = Daily_menu(date, group, new_recipe, quantity, allowed)._get_properties()
+        menu_data = Daily_menu(date, group, recipe, quantity, allowed)._get_properties()
         if is_menu_created:
             help.update_menu(MENU, date, menu_data[2], group)
         else:

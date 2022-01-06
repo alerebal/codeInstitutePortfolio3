@@ -132,7 +132,7 @@ def find_kids_allergic_to_recipe(kids, ingredients):
             # I have to take off the blank spaces in both ingredients and allergies for them to match
             kid_allergies = [aller.strip() for aller in kid['allergies'].split(',')]
             for ing in ingredients:
-                if ing.strip() in kid_allergies:
+                if ing.strip() in kid_allergies and not kid in kids_allergic_to_recipe:
                     kids_allergic_to_recipe.append(kid)
     return kids_allergic_to_recipe
 
