@@ -1,35 +1,3 @@
-<!-- ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
-
-Welcome USER_NAME,
-
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **August 17, 2021**
-
-## Reminders
-
-* Your code must be placed in the `run.py` file
-* Your dependencies must be placed in the `requirements.txt` file
-* Do not edit any of the other files or your code may not deploy properly
-
-## Creating the Heroku app
-
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
------
-Happy coding! -->
-
 # Daily Manu APP
 
 The main goal of this app is to create a daily menu for a group of kids. The user can create kids and recipes data, then choose a group of kids or all of them and choose a recipe to create a daily menu.
@@ -106,3 +74,36 @@ Every field to fill has its validator and an alert will be show to user in case 
 When the data is saved a message is shown to the user
 
 ![Image](images/readme/create_data_1.png)
+
+## Features left to implement
+
+A nice feature would be to create a weekly menu, where the user could create a menu for every day of the week.
+
+Another interesting feature would be to have the possibility to add quantity of each ingredient in a recipe, in grams or units, so that each recipe has a total amount of weight or units of ingredients, then a purchase list can be created from those ingredients for each recipe for the day or the week if the weekly menu had been implemented.
+
+## Testing
+
+## Bugs
+
+## Deployment
+
+### The app has been deployed in Heroku.
+
+First of all I had to create or in this case update a file with the needed requirements to the app works. It says to Heroku which dependencies are necessary to be implemented.
+
+To do that I used the command `pip3 freeze --local > requirements.txt` . I had use first just `pip3 freeze > requirements.txt` but it didn't work.
+
+Then I pushed the code to github and create a Heroku account. Create an account is very easy, just register the email and follow the tipical steps to finish the registration.
+
+In Heroku I had to create a new app, give it a name and choosing a region.
+
+Once the app is created, I went to setting, in config vars configuration, I setted the environment variables that were two, CREDS = creas.json and PORT = 8000.
+
+Next step is to add two buildpacks, Python and Node. In that order. That is very important.
+
+Then I went to deploy section and connect the app with the github repository. There are two ways to connect it with github, enable automatics deploys if we want to every time we push a commit the app automatically rebuild or manually deploy which was what I used this time.
+
+After this if there is no problem with the code, the app will be build.
+
+
+
