@@ -31,9 +31,11 @@ list_regex = "(^[a-z,\s]+)*"
 only_numbers_regex = "[0-9]+"
 group_of_kids_regex = re.compile("(green|blue|yellow|all)", re.I)
 
+
 def create_data_choice():
     """
-    Give the user the chance to create kid or recipe data and save it in the worksheet
+    Give the user the chance to create kid or recipe data and save it in the
+    worksheet
     """
     help.print_splitter_dash()
     print(txt.create_data)
@@ -55,12 +57,18 @@ def create_kid():
     print('Creat a new kid\n')
     # get the variables from inputs
     name = help.validate_data("Name(only letters): \n", only_letters_regex)
-    last_name = help.validate_data("Last name(only letters): \n", only_letters_regex)
-    age = int(help.validate_data("Age(Number between 1 and 3): \n", age_regex))
-    tutor = help.validate_data("Name of the tutor(only letters): \n", only_letters_regex)
-    contact = help.validate_data("Contact number(must have this format: 123-456-7890): \n", phone_number_regex)
-    allergies = help.validate_data("Allergies(only lowercase letters, if more than one, separated by commas. If no allergies, just leave it blank): \n", list_regex)
-    # get last kid id from worksheet, if there is no kids yet, I have to assign 0, if not, it give me an error
+    last_name = help.validate_data("Last name(only letters): \n",
+                                   only_letters_regex)
+    age = int(help.validate_data("Age(Number between 1 and 3): \n",
+                                 age_regex))
+    tutor = help.validate_data("Name of the tutor(only letters): \n",
+                               only_letters_regex)
+    contact_input = "Contact number(must have this format: 123-456-7890): \n"
+    contact = help.validate_data(contact_input, phone_number_regex)
+    aller_iput = 'Allergies(lowercase, split by commas or leave it blank):\n'
+    allergies = help.validate_data(aller_iput, list_regex)
+    # get last kid id from worksheet, if there is no kids yet, I have to
+    # assign 0, if not, it give me an error
     ALL_KIDS = KIDS.get_all_records()
     if len(ALL_KIDS) == 0:
         last_id = 0
@@ -85,8 +93,10 @@ def create_recipe():
     print('Create a new recipe\n')
     # get the variables from the inputs
     name = help.validate_data('Name(only letters): \n', only_letters_regex)
-    ingredients = help.validate_data('Ingredients(only lowercase letters, separated by commas: \n', list_regex)
-    # get last food id from worksheet, if there is no food yet, I have to assign 0
+    ing_input = 'Ingredients(only lowercase letters, separated by commas: \n'
+    ingredients = help.validate_data(ing_input, list_regex)
+    # get last food id from worksheet, if there is no food yet, I have to
+    # assign 0
     ALL_RECIPES = RECIPES.get_all_records()
     if len(ALL_RECIPES) == 0:
         last_id = 0
@@ -119,7 +129,8 @@ def retrive_data_choice():
             help.print_splitter_dash()
             data = False
             while data == False:
-                select = help.validate_data('Your choice(only letters):\n', only_letters_regex)
+                select = help.validate_data('Your choice(only letters):\n',
+                                            only_letters_regex)
                 data = retrieve_kids_data(select)
                 help.print_splitter_dash()
             if len(data) == 1:
@@ -135,7 +146,8 @@ def retrive_data_choice():
             help.print_splitter_dash()
             data = False
             while data == False:
-                select = help.validate_data('Your choice(only letters):\n', only_letters_regex)
+                select = help.validate_data('Your choice(only letters):\n',
+                                            only_letters_regex)
                 data = retrieve_recipe_data(select)
                 help.print_splitter_dash()
             if len(data) == 1:
@@ -152,11 +164,15 @@ def retrive_data_choice():
 
 def retrieve_kids_data(select):
     """
-    Retrieve kids data from database. One particular kid, a group of kids by their color group or all the kids
+    Retrieve kids data from database. One particular kid, a group of kids by
+    their color group or all the kids
     """
     ALL_KIDS = KIDS.get_all_records()
-    if select.upper() == 'BLUE' or select.upper() == 'GREEN' or select.upper() == 'YELLOW':
-        filter_list = [kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()]
+    if (select.upper() == 'BLUE' or select.upper() == 'GREEN' or
+       select.upper() == 'YELLOW'):
+        filter_list = [
+            kid for kid in ALL_KIDS if kid['group'].upper() == select.upper()
+            ]
         return filter_list
     elif select.upper() == 'ALL':
         return ALL_KIDS
@@ -179,24 +195,30 @@ def retrieve_recipe_data(select):
 
 def daily_menu():
     """
-    Allows user to get a menu for children, if someone is alergic to any recipe, give user the possibility to get other recipe.
+    Allows user to get a menu for children, if someone is alergic to any recipe
+    give user the possibility to get other recipe.
     """
     help.print_splitter_dash()
     print(txt.daily_menu)
     help.print_splitter_dash()
     print()
     are_menu_created = check_created_menus()
-    # if None is received that means that I need to go to main menu, but if I go here to main menu, it will open that menu more than once and to go out of the proggram the user needs to press exit more than once. I must return None here because of that.
+    # if None is received that means that I need to go to main menu, but if
+    # I go here to main menu, it will open that menu more than once and to go
+    # out of the proggram the user needs to press exit more than once. I must
+    # return None here because of that.
     if are_menu_created == None:
         return None
     print()
     help.print_splitter_dash()
     # get the date
     date = help.get_date()
-    # set to False the variables than are needed to run the app and give them a value inside a while loop
+    # set to False the variables than are needed to run the app and give them
+    # a value inside a while loop
     kids = False
     while kids == False:
-        group = help.validate_data('Select the children:\n', group_of_kids_regex)
+        group = help.validate_data('Select the children:\n',
+                                   group_of_kids_regex)
         kids = retrieve_kids_data(group)
         help.print_splitter_dash()
     is_menu_created = help.is_menu_created(are_menu_created, group)
@@ -217,29 +239,38 @@ def daily_menu():
     help.print_splitter_dash()
     recipe = False
     while recipe == False:
-        id_input= int(help.validate_data('Select a recipe by its id:\n', only_numbers_regex))
+        id_input = int(help.validate_data('Select a recipe by its id:\n',
+                                          only_numbers_regex))
         recipe = help.get_data_from_id(id_input, ALL_RECIPES)
     # find out if there are allergic kids to the recipe.
-    is_someone_allergic = help.find_kids_allergic_to_recipe(kids, recipe['ingredients'].split(','))
-    # if more than one list them and show what recipes they can eat, to the user choose one
+    is_someone_allergic = help.find_kids_allergic_to_recipe(
+        kids, recipe['ingredients'].split(',')
+        )
+    # if more than one list them and show what recipes they can eat, to
+    # the user choose one
     if len(is_someone_allergic) > 1:
         quantity = len(kids) - len(is_someone_allergic)
         allowed = []
         help.print_splitter_dash()
+        lenght = len(is_someone_allergic)
         print()
-        print(f'There are {len(is_someone_allergic)} kids allergic to this recipe')
+        print(f'There are {lenght} kids allergic to this recipe')
         print('Choose another recipe for them\n')
         for kid in is_someone_allergic:
             help.print_splitter_dash()
-            kid_allow_recipes = help.recipes_for_an_allergic_kid(kid, ALL_RECIPES)
+            kid_allow_recipes = help.recipes_for_an_allergic_kid(kid,
+                                                                 ALL_RECIPES)
             print(f"{kid['name']} {kid['last_name']} can eat:\n")
             for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
             print()
             new_recipe = False
             while new_recipe == False:
-                new_recipe_id = help.validate_data('Choose the recipe by Id: \n', only_numbers_regex)
-                new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
+                new_recipe_id = help.validate_data(
+                    'Choose the recipe by Id:\n', only_numbers_regex
+                    )
+                new_recipe = help.get_data_from_id(new_recipe_id,
+                                                   kid_allow_recipes)
             if new_recipe in allowed:
                 new_recipe['quantity'] += 1
                 new_recipe['kids_id'].append(kid['id'])
@@ -248,24 +279,33 @@ def daily_menu():
                 allowed.append(new_recipe)
                 new_recipe['kids_id'] = [kid['id']]
             print()
-            print(f"The recipe {new_recipe['name']} has been selected for {kid['name']} {kid['last_name']}\n")
+            print(f"""
+Recipe {new_recipe['name']} selected for {kid['name']} {kid['last_name']}\n""")
         help.print_splitter_dash()
         print()
-        print(f"Must be prepared {len(kids) - len(is_someone_allergic)} rations of {recipe['name']}")
+        print(f"""
+Must be prepared {len(kids) - lenght} rations of {recipe['name']}""")
         for new_recipe in allowed:
             if new_recipe['quantity'] > 1:
-                print(f"Must be prepared {new_recipe['quantity']} rations of {new_recipe['name']}")
+                print(f"""
+Must be prepared {new_recipe['quantity']} rations of {new_recipe['name']}""")
             else:
-                print(f"Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}")
+                print(f"""
+Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}""")
         print()
         # create an instance an add the data to the worksheet
-        menu_data = Daily_menu(date, group, recipe, quantity, allowed)._get_properties()
+        menu_data = Daily_menu(date,
+                               group,
+                               recipe,
+                               quantity,
+                               allowed)._get_properties()
         if is_menu_created:
             help.update_menu(MENU, date, menu_data[2], group)
         else:
             MENU.append_row(menu_data)
         help.print_continue_option()
-    # if there is one, show him and the recipes that their can eat to the user to choose one
+    # if there is one, show him and the recipes that their can eat to the
+    # user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
         quantity = len(kids) - 1
@@ -281,10 +321,13 @@ def daily_menu():
         print()
         new_recipe = False
         while new_recipe == False:
-            new_recipe_id = help.validate_data('Choose the recipe by Id: \n', only_numbers_regex)
-            new_recipe = help.get_data_from_id(new_recipe_id, kid_allow_recipes)
+            new_recipe_id = help.validate_data('Choose the recipe by Id: \n',
+                                               only_numbers_regex)
+            new_recipe = help.get_data_from_id(new_recipe_id,
+                                               kid_allow_recipes)
         print()
-        print(f"The recipe {new_recipe['name']} has been selected for {kid['name']} {kid['last_name']}\n")
+        print(f"""
+Recipe {new_recipe['name']} selected for {kid['name']} {kid['last_name']}\n""")
         help.print_splitter_dash()
         print()
         print(f"Must be prepared {quantity} rations of {recipe['name']}")
@@ -293,7 +336,11 @@ def daily_menu():
         new_recipe['kids_id'] = [kid['id']]
         new_recipe['quantity'] = 1
         # create an instance an add the data to the worksheet
-        menu_data = Daily_menu(date, group, recipe, quantity, [new_recipe])._get_properties()
+        menu_data = Daily_menu(date,
+                               group,
+                               recipe,
+                               quantity,
+                               [new_recipe])._get_properties()
         if is_menu_created:
             help.update_menu(MENU, date, menu_data[2], group)
         else:
@@ -317,7 +364,8 @@ def daily_menu():
 
 def check_created_menus():
     """
-    Check if the daily menu have been created or not for any group or of all them.
+    Check if the daily menu have been created or not for any group or of
+    all them.
     """
     ALL_MENUS = MENU.get_all_records()
     ALL_RECIPES = RECIPES.get_all_records()
@@ -335,7 +383,10 @@ def check_created_menus():
     if len(are_menu_created) == 0:
         print('There is no daily menu created yet\n')
         while True:
-            create_or_main = help.validate_data('Press C to create a new menu or any key to go to main menu\n', only_letters_regex)
+            create_or_main_inp = """
+Press C to create a new menu or any key to go to main menu\n"""
+            create_or_main = help.validate_data(create_or_main_inp,
+                                                only_letters_regex)
             if create_or_main.upper() == 'C':
                 return are_menu_created
             else:
@@ -346,9 +397,15 @@ def check_created_menus():
         if 'ALL' in created_groups:
             print('The daily menu for ALL the children is ALREADY created\n')
             while True:
-                show_menu = help.validate_data('Press S to see the menu, C to create a new menu, M to go back to main menu\n', only_letters_regex)
+                show_menu_inp = """
+Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
+                show_menu = help.validate_data(show_menu_inp,
+                                               only_letters_regex)
                 if show_menu.upper() == 'S':
-                    menu = [all for all in are_menu_created if all['group'].upper() == 'ALL']
+                    menu = [
+                        all for all in are_menu_created
+                        if all['group'].upper() == 'ALL'
+                        ]
                     help.print_menu(menu, ALL_RECIPES, ALL_KIDS)
                 elif show_menu.upper() == 'C':
                     return are_menu_created
@@ -356,12 +413,19 @@ def check_created_menus():
                     return main()
         else:
             for group in are_menu_created:
-                print(f"The daily menu for the group {group['group'].upper()} is ALREADY created.")
+                print(f"""
+The daily menu for the group {group['group'].upper()} is ALREADY created.""")
             print()
             while True:
-                show_menu = help.validate_data('Press S to see the menu, C to create a new menu, M to go back to main menu\n', only_letters_regex)
+                show_menu_inp = """
+Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
+                show_menu = help.validate_data(show_menu_inp,
+                                               only_letters_regex)
                 if show_menu.upper() == 'S':
-                    menus = [group for group in are_menu_created if group['group'].upper() != 'ALL']
+                    menus = [
+                        group for group in are_menu_created
+                        if group['group'].upper() != 'ALL'
+                        ]
                     help.print_menu(menus, ALL_RECIPES, ALL_KIDS)
                 elif show_menu.upper() == 'C':
                     return are_menu_created
