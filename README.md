@@ -85,6 +85,18 @@ Another interesting feature would be to have the possibility to add quantity of 
 
 ## Bugs
 
+When a kid had more than one allergy to a recipe, they was counted as a different child as many time as there were allergies.
+
+I fixed it adding a condition to the loop in which the allergic kids were counted: 
+
+![Image](images/readme/bugs/kid_more_than_one_allergy.png)
+
+When I had two or more different allergy recipes and loaded them into the worksheet, only one would be saved. That was because I was rewriting the object.
+
+In fact, I was making the code more complicated than it should be. The final code is as follow:
+
+![Image](images/readme/bugs/allergic_recipes_fixed.png)
+
 ## Deployment
 
 ### The app has been deployed in Heroku.
@@ -104,6 +116,8 @@ Next step is to add two buildpacks, Python and Node. In that order. That is very
 Then I went to deploy section and connect the app with the github repository. There are two ways to connect it with github, enable automatics deploys if we want to every time we push a commit the app automatically rebuild or manually deploy which was what I used this time.
 
 After this if there is no problem with the code, the app will be build.
+
+[The app is runnig here](https://ale-daily-menu.herokuapp.com/)
 
 
 
