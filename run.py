@@ -30,6 +30,7 @@ phone_number_regex = "\d{3}-\d{3}-\d{4}"
 list_regex = "(^[a-z,\s]+)*"
 only_numbers_regex = "[0-9]+"
 group_of_kids_regex = re.compile("(green|blue|yellow|all)", re.I)
+kid_or_recipe_regex = re.compile("(k|r)", re.I)
 
 
 def create_data_choice():
@@ -40,15 +41,11 @@ def create_data_choice():
     help.print_splitter_dash()
     print(txt.create_data)
     help.print_splitter_dash()
-    choice = None
-    while choice == None:
-        choice = input('Your choice:\n')
-        if choice.upper() == 'K':
-            create_kid()
-        elif choice.upper() == 'R':
-            create_recipe()
-        else:
-            choice = None
+    choice = help.validate_data('Your choice:\n', kid_or_recipe_regex)
+    if choice.upper() == 'K':
+        create_kid()
+    elif choice.upper() == 'R':
+        create_recipe()
 
 
 def create_kid():
@@ -120,46 +117,38 @@ def retrive_data_choice():
     help.print_splitter_dash()
     print(txt.retrieve_data)
     help.print_splitter_dash()
-    choice = False
-    while choice == False:
-        choice = input('Your choice:\n')
+    choice = help.validate_data('Your choice:\n', kid_or_recipe_regex)
+    help.print_splitter_dash()
+    if choice.upper() == 'K':
+        print(txt.retrieve_users)
         help.print_splitter_dash()
-        if choice.upper() == 'K':
-            print(txt.retrieve_users)
-            help.print_splitter_dash()
-            data = False
-            while data == False:
-                select = help.validate_data('Your choice(only letters):\n',
-                                            only_letters_regex)
-                data = retrieve_kids_data(select)
-                help.print_splitter_dash()
-            if len(data) == 1:
-                help.print_kid_all_data(data[0])
-            else:
-                print()
-                for kid in data:
-                    help.print_kid(kid)
-                print()
-            help.print_continue_option()
-        elif choice.upper() == 'R':
-            print(txt.retrieve_recipes)
-            help.print_splitter_dash()
-            data = False
-            while data == False:
-                select = help.validate_data('Your choice(only letters):\n',
-                                            only_letters_regex)
-                data = retrieve_recipe_data(select)
-                help.print_splitter_dash()
-            if len(data) == 1:
-                help.print_recipe_all_data(data[0])
-            else:
-                print()
-                for recipe in data:
-                    help.print_recipe(recipe)
-                print()
-            help.print_continue_option()
+        select = help.validate_data('Your choice(only letters):\n',
+                                    only_letters_regex)
+        data = retrieve_kids_data(select)
+        help.print_splitter_dash()
+        if len(data) == 1:
+            help.print_kid_all_data(data[0])
         else:
-            choice = False
+            print()
+            for kid in data:
+                help.print_kid(kid)
+            print()
+        help.print_continue_option()
+    elif choice.upper() == 'R':
+        print(txt.retrieve_recipes)
+        help.print_splitter_dash()
+        select = help.validate_data('Your choice(only letters):\n',
+                                    only_letters_regex)
+        data = retrieve_recipe_data(select)
+        help.print_splitter_dash()
+        if len(data) == 1:
+            help.print_recipe_all_data(data[0])
+        else:
+            print()
+            for recipe in data:
+                help.print_recipe(recipe)
+            print()
+        help.print_continue_option()
 
 
 def retrieve_kids_data(select):
@@ -178,7 +167,10 @@ def retrieve_kids_data(select):
         return ALL_KIDS
     else:
         kid = help.get_object_from_worksheet(select.upper(), ALL_KIDS)
-        return kid
+        if kid:
+            return kid
+        else:
+            return []
 
 
 def retrieve_recipe_data(select):
@@ -190,7 +182,10 @@ def retrieve_recipe_data(select):
         return ALL_RECIPES
     else:
         recipe = help.get_object_from_worksheet(select.upper(), ALL_RECIPES)
-        return recipe
+        if recipe:
+            return recipe
+        else:
+            return []
 
 
 def daily_menu():
@@ -203,33 +198,27 @@ def daily_menu():
     help.print_splitter_dash()
     print()
     are_menu_created = check_created_menus()
-    # if None is received that means that I need to go to main menu, but if
-    # I go here to main menu, it will open that menu more than once and to go
-    # out of the proggram the user needs to press exit more than once. I must
-    # return None here because of that.
-    if are_menu_created == None:
+    # if None the user wants to come back to main menu, but if I send them to
+    # main menu here, exit option does not work. That's why I return None
+    if are_menu_created is None:
         return None
     print()
     help.print_splitter_dash()
     # get the date
     date = help.get_date()
-    # set to False the variables than are needed to run the app and give them
-    # a value inside a while loop
-    kids = False
-    while kids == False:
-        group = help.validate_data('Select the children:\n',
-                                   group_of_kids_regex)
-        kids = retrieve_kids_data(group)
-        help.print_splitter_dash()
+    group = help.validate_data('Select the children:\n',
+                               group_of_kids_regex)
+    kids = retrieve_kids_data(group)
+    help.print_splitter_dash()
     is_menu_created = help.is_menu_created(are_menu_created, group)
     if is_menu_created:
         print(f"The daily menu for the group {group} is already created\n")
-        while True:
-            update = input("Do you want to update it? Y/N\n")
-            if update.upper() == 'Y':
-                break
-            elif update.upper() == 'N':
-                return daily_menu()
+        update = help.validate_data("Do you want to update it? Y/N\n",
+                                    "(y|Y|n|N)")
+        if update.upper() == 'N':
+            return daily_menu()
+        if update.upper() == 'Y':
+            help.print_splitter_dash()
     print(f"Children selected: {group.upper()}\n")
     # show the user all the recipes for their to choose one
     ALL_RECIPES = RECIPES.get_all_records()
@@ -237,9 +226,17 @@ def daily_menu():
         help.print_recipe(recipe)
     print()
     help.print_splitter_dash()
-    recipe = False
-    while recipe == False:
-        id_input = int(help.validate_data('Select a recipe by its id:\n',
+    id_input = int(help.validate_data('Select a recipe by its id:\n',
+                                      only_numbers_regex))
+    recipe = help.get_data_from_id(id_input, ALL_RECIPES)
+    while not recipe:
+        help.print_splitter_dash()
+        print('Recipe not found. Enter valid Id\n')
+        for recipe in ALL_RECIPES:
+            help.print_recipe(recipe)
+        print()
+        help.print_splitter_dash()
+        id_input = int(help.validate_data('Recipe Id:\n',
                                           only_numbers_regex))
         recipe = help.get_data_from_id(id_input, ALL_RECIPES)
     # find out if there are allergic kids to the recipe.
@@ -264,13 +261,21 @@ def daily_menu():
             for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
             print()
-            new_recipe = False
-            while new_recipe == False:
-                new_recipe_id = help.validate_data(
-                    'Choose the recipe by Id:\n', only_numbers_regex
-                    )
-                new_recipe = help.get_data_from_id(new_recipe_id,
-                                                   kid_allow_recipes)
+            new_recipe_id = help.validate_data(
+                'Choose the recipe by Id:\n', only_numbers_regex
+                )
+            new_recipe = help.get_data_from_id(new_recipe_id,
+                                               kid_allow_recipes)
+            while not new_recipe:
+                help.print_splitter_dash()
+                print('Recipe not found. Enter valid Id\n')
+                for recipe in kid_allow_recipes:
+                    help.print_recipe(recipe)
+                print()
+                help.print_splitter_dash()
+                id_input = int(help.validate_data('Recipe Id:\n',
+                                                  only_numbers_regex))
+                new_recipe = help.get_data_from_id(id_input, kid_allow_recipes)
             if new_recipe in allowed:
                 new_recipe['quantity'] += 1
                 new_recipe['kids_id'].append(kid['id'])
@@ -319,12 +324,20 @@ Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}""")
         for allow_recipe in kid_allow_recipes:
                 help.print_recipe(allow_recipe)
         print()
-        new_recipe = False
-        while new_recipe == False:
-            new_recipe_id = help.validate_data('Choose the recipe by Id: \n',
-                                               only_numbers_regex)
-            new_recipe = help.get_data_from_id(new_recipe_id,
-                                               kid_allow_recipes)
+        new_recipe_id = help.validate_data('Choose the recipe by Id: \n',
+                                           only_numbers_regex)
+        new_recipe = help.get_data_from_id(new_recipe_id,
+                                           kid_allow_recipes)
+        while not new_recipe:
+            help.print_splitter_dash()
+            print('Recipe not found. Enter valid Id\n')
+            for recipe in kid_allow_recipes:
+                help.print_recipe(recipe)
+            print()
+            help.print_splitter_dash()
+            id_input = int(help.validate_data('Recipe Id:\n',
+                                              only_numbers_regex))
+            new_recipe = help.get_data_from_id(id_input, kid_allow_recipes)
         print()
         print(f"""
 Recipe {new_recipe['name']} selected for {kid['name']} {kid['last_name']}\n""")
@@ -386,7 +399,7 @@ def check_created_menus():
             create_or_main_inp = """
 Press C to create a new menu or any key to go to main menu\n"""
             create_or_main = help.validate_data(create_or_main_inp,
-                                                only_letters_regex)
+                                                "\w")
             if create_or_main.upper() == 'C':
                 return are_menu_created
             else:
@@ -431,7 +444,6 @@ Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
                     return are_menu_created
                 elif show_menu.upper() == 'M':
                     return main()
-    return None
 
 
 def main():
