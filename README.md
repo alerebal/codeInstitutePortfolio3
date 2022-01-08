@@ -5,6 +5,32 @@ The main goal of this app is to create a daily menu for a group of kids. The use
 When a kid is created, a list of allergies can be created if the kid has one or more.
 Then, this list is compared against the ingredients of a recipe chosen, and if the kid is allergic to an ingredient, the user is alerted and they can choose another recipe for that kid.
 
+The app is a command line automation that runs in Python, the data is stored in a spreadsheet and to connect it I use Google Cloud, in which I enabled Google Sheet to connect to the spreadsheet and Google Drive where the credentials are setting up.
+
+I used the libraries Google Auth to setup the authentication needed to access to Google Cloud and Gspread to access and update the spreadsheet.
+
+## Diagrams to plan the project
+
+In the beginning my idea was just create a database of kids and recipes. The user or admin could only add the data, but that data could not interact with each other.
+
+### General app diagram
+
+![Image](images/readme/diagrams/general_diagram.png)
+
+### Add user diagram
+
+![Image](images/readme/diagrams/add_user_diagram.png)
+
+After a few days I had the idea to improve the app and make the daily menu in which the data interacted.
+
+### General app diagram updated
+
+![Image](images/readme/diagrams/general_diagram_updated.png)
+
+### Daily menu diagram
+
+![Image](images/readme/diagrams/daily_menu_diagram.png)
+
 ## Features
 
 ### Welcome to the app
