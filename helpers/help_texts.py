@@ -34,6 +34,7 @@ Retrieve data:
 Get data about one specific child by their name or id, sorted by their group or
 all of the children.
 Get data on any recipe by name or ID, or get all recipes.
+Once you get the data, you can remove it or continue to main menu.
 
 Create data:
 Create data of a child following different steps. The system will guide you

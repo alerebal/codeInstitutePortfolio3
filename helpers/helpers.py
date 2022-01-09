@@ -226,3 +226,13 @@ def is_menu_created(created_menus, group):
     for menu in created_menus:
         if menu['group'].upper() == group.upper():
             return True
+
+
+def remove_an_object(obj_id, worksheet):
+    obj_to_remove = worksheet.find(obj_id)
+    if obj_to_remove:
+        row = obj_to_remove.row
+        worksheet.delete_rows(row)
+        print('Removed successfully\n')
+    else:
+        print('An error has occurred\n')

@@ -128,12 +128,17 @@ def retrive_data_choice():
         help.print_splitter_dash()
         if len(data) == 1:
             help.print_kid_all_data(data[0])
+            rem_p = ('Press R to remove kid or any letter to continue:\n')
+            rem_inp = help.validate_data(rem_p, only_letters_regex)
+            if rem_inp.upper() == 'R':
+                help.remove_an_object(str(data[0]['id']), KIDS)
+            else:
+                return
         else:
             print()
             for kid in data:
                 help.print_kid(kid)
             print()
-        help.print_continue_option()
     elif choice.upper() == 'R':
         print(txt.retrieve_recipes)
         help.print_splitter_dash()
@@ -143,12 +148,17 @@ def retrive_data_choice():
         help.print_splitter_dash()
         if len(data) == 1:
             help.print_recipe_all_data(data[0])
+            rem_p = ('Press R to remove recipe or any letter to continue:\n')
+            rem_inp = help.validate_data(rem_p, only_letters_regex)
+            if rem_inp.upper() == 'R':
+                help.remove_an_object(str(data[0]['id']), RECIPES)
+            else:
+                return
         else:
             print()
             for recipe in data:
                 help.print_recipe(recipe)
             print()
-        help.print_continue_option()
 
 
 def retrieve_kids_data(select):
