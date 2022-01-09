@@ -131,7 +131,7 @@ def retrive_data_choice():
             rem_p = ('Press R to remove kid or any letter to continue:\n')
             rem_inp = help.validate_data(rem_p, only_letters_regex)
             if rem_inp.upper() == 'R':
-                help.remove_an_object(str(data[0]['id']), KIDS)
+                help.remove_an_object(KIDS, str(data[0]['id']))
             else:
                 return
         else:
@@ -151,7 +151,7 @@ def retrive_data_choice():
             rem_p = ('Press R to remove recipe or any letter to continue:\n')
             rem_inp = help.validate_data(rem_p, only_letters_regex)
             if rem_inp.upper() == 'R':
-                help.remove_an_object(str(data[0]['id']), RECIPES)
+                help.remove_an_object(RECIPES, str(data[0]['id']))
             else:
                 return
         else:
@@ -430,6 +430,13 @@ Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
                         if all['group'].upper() == 'ALL'
                         ]
                     help.print_menu(menu, ALL_RECIPES, ALL_KIDS)
+                    rem_p = ('Press R to remove menu, any key to continue:\n')
+                    rem_inp = help.validate_data(rem_p, only_letters_regex)
+                    if rem_inp.upper() == 'R':
+                        help.remove_an_object(MENU, None, date)
+                        return main()
+                    else:
+                        return main()
                 elif show_menu.upper() == 'C':
                     return are_menu_created
                 elif show_menu.upper() == 'M':

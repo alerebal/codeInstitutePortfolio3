@@ -28,7 +28,7 @@ to any ingredient in the recipe.
 If no one is allergic, the recipe will be assigned to the menu, otherwise,
 choose any recipe for allergic children from a specific list that includes all
 the recipes allowed for those children.
-The menu for all children always prevails over the groups.
+The menu for all children prevails over menus group. This menu can be deleted.
 
 Retrieve data:
 Get data about one specific child by their name or id, sorted by their group or

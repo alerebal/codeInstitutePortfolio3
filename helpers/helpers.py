@@ -228,11 +228,26 @@ def is_menu_created(created_menus, group):
             return True
 
 
-def remove_an_object(obj_id, worksheet):
-    obj_to_remove = worksheet.find(obj_id)
-    if obj_to_remove:
-        row = obj_to_remove.row
-        worksheet.delete_rows(row)
-        print('Removed successfully\n')
-    else:
-        print('An error has occurred\n')
+def remove_an_object(worksheet, obj_id = None, date = None):
+    """
+    Remove an object from the worksheet. If I want to remove a recipe or a kid
+    I will need the obj_id number and if I want to remove a menu for all the
+    kids I will need the date parameter.
+    """
+    if obj_id:
+        obj_to_remove = worksheet.find(obj_id)
+        if obj_to_remove:
+            row_number = obj_to_remove.row
+            worksheet.delete_rows(row_number)
+            print('Removed successfully\n')
+        else:
+            print('An error has occurred\n')
+    if date:
+        menus = worksheet.findall(date)
+        for menu in menus:
+            row_number = menu.row
+            if 'ALL' in worksheet.row_values(row_number)[1].upper():
+                worksheet.delete_rows(row_number)
+                print('Removed successfully\n')
+            else:
+                print('An error has occurred\n')
