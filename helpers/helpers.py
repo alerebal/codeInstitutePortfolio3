@@ -239,6 +239,8 @@ def remove_an_object(worksheet, obj_id=None, date=None):
         if obj_to_remove:
             row_number = obj_to_remove.row
             worksheet.delete_rows(row_number)
+            print_splitter_dash()
+            print()
             print('Removed successfully\n')
         else:
             print('An error has occurred\n')
@@ -248,6 +250,8 @@ def remove_an_object(worksheet, obj_id=None, date=None):
             row_number = menu.row
             if 'ALL' in worksheet.row_values(row_number)[1].upper():
                 worksheet.delete_rows(row_number)
+                print_splitter_dash()
+                print()
                 print('Removed successfully\n')
             else:
                 print('An error has occurred\n')
