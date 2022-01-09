@@ -228,7 +228,7 @@ def is_menu_created(created_menus, group):
             return True
 
 
-def remove_an_object(worksheet, obj_id = None, date = None):
+def remove_an_object(worksheet, obj_id=None, date=None):
     """
     Remove an object from the worksheet. If I want to remove a recipe or a kid
     I will need the obj_id number and if I want to remove a menu for all the
