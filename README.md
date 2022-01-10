@@ -109,6 +109,12 @@ Another interesting feature would be to have the possibility to add quantity of 
 
 ## Testing
 
+### All the files pass the [PEP8](http://pep8online.com/) test successfully.
+
+The run.py file as example
+
+![Image](images/readme/testing/run_pep8.png)
+
 ## Bugs
 
 When a kid had more than one allergy to a recipe, they was counted as a different child as many time as there were allergies.
@@ -135,7 +141,7 @@ Then I pushed the code to github and create a Heroku account. Create an account 
 
 In Heroku I had to create a new app, give it a name and choosing a region.
 
-Once the app is created, I went to setting, in config vars configuration, I setted the environment variables that were two, CREDS = creas.json and PORT = 8000.
+Once the app is created, I went to setting, in config vars configuration, I setted the environment variables that were two, `CREDS = creas.json` and `PORT = 8000`.
 
 Next step is to add two buildpacks, Python and Node. In that order. That is very important.
 
@@ -145,5 +151,50 @@ After this if there is no problem with the code, the app will be build.
 
 [The app is runnig here](https://ale-daily-menu.herokuapp.com/)
 
+## Used libraries
 
+### External
 
+#### Gspead
+
+[Gspread](https://docs.gspread.org/en/v5.1.1/) is a Python API for Google Sheets.
+
+This library allow us to read, write, update and delete data from a spreadsheet.
+
+First of all you have to open a project as a client `GSPREAD.CLIENT.open('name of the project')` and assign it to a variable.
+After that you can select a worksheet `worksheet('name of the worksheet')` and assign it to variable as well.
+
+![Image](images/readme/libraries/gspread_1.png)
+
+Then you can start to get and set data in that spreadsheet. Here is an example as how you can get all the values of a worksheet as dictionaries.
+
+![Image](images/readme/libraries/gspread_get_all_records.png)
+
+#### Google Auth
+
+[Google Auth](https://console.cloud.google.com) library allows us to access Google Cloud safely through a method called Credentials.
+
+We have to call a method called from_service_account_file and pass to it our credential as a parameter. We get our credentials from our Google Cloud account inside the project we are working with and save it as a enviromenment variable in our local project. Save it in a variable
+
+Then using the previous variable created we call the with_scopes method passing to it the scope that we need to authorize. Save it in a variable
+
+Finally we need to authorize the gspread library to work in our project. To do that gspread has a method called authorize in which we have to pass the previous created variable in which we saved the scope variables.
+
+The process is as follow:
+
+![Image](images/readme/libraries/google_auth.png)
+
+### Python built-in libraries 
+
+#### Re
+
+[Re](https://docs.python.org/3/library/re.html) is a regular expression library that allow us to check if a sentence match with a expression set for us. I used it to validate the user inputs.
+
+#### Datetime
+
+[Datetime](https://docs.python.org/3/library/datetime.html) library that supplies classes to work with date and time. I used it to get the date. I needed the date to create a daily menu and for check if a menu already exists when the user is going to create one.
+
+#### Json
+
+[Json](https://docs.python.org/3/library/json.html) library allow us to work with JSON data, to convert a file JSON to string and a string to a JSON file. I used it to the method loads('string to convert) to get a JSON file from the data that is coming from the worksheet. And I used it to convert a JSON file to a string with the method dumps(JSON file)
+to send the data to the worksheet.
