@@ -39,19 +39,19 @@ The first screen that the user sees is a welcome with a little explanation about
 
 They can choose to create a menu, retrieve data, create data, get some help or leave the app. 
 
-![Image](images/readme/welcome.png)
+![Image](images/readme/img/welcome.png)
 
 ### Help
 
 Here the user can get a deeper explanation about the app.
 
-![Image](images/readme/help.png)
+![Image](images/readme/img/help.png)
 
 ### Cretae a menu
 
 When the user enters the daily menu option, a screen is displayed indicating if a menu has already been created. If no menu has been created yet, the screen is as follows.
 
-![Image](images/readme/daily_no_created.png)
+![Image](images/readme/img/daily_no_created.png)
 
 The user can choose to create a daily menu for a specific group or for all the children.
 
@@ -59,35 +59,47 @@ A list of all the recipes is displayed for the user choose one of them by its id
 
 This screen is shown when an user choose to create a menu for a specific group. A menu is already created in this screenshot.
 
-![Image](images/readme/create_menu_1.png)
+![Image](images/readme/img/create_menu_1.png)
 
 Once the user has chosen a recipe, if one or more kids are allergic to it, the user must choose another recipe for them.
 
-![Image](images/readme/create_menu_2.png)
+![Image](images/readme/img/create_menu_2.png)
 
-![Image](images/readme/create_menu_3.png)
+![Image](images/readme/img/create_menu_3.png)
 
 When all the kids have an assign recipe, every recipe chosen is show as well as the rations of each of them that have to be prepared.
 
-![Image](images/readme/create_menu_4.png)
+![Image](images/readme/img/create_menu_4.png)
 
 From the daily menu panel the user can see which are the menus that have been already created. 
 
-![Image](images/readme/daily_menu_1.png)
+![Image](images/readme/img/daily_menu_1.png)
 
 The user can update a menu if it is already created and the old menu will be replaced by the new one.
 
-![Image](images/readme/update_menu.png)
+![Image](images/readme/img/update_menu.png)
 
 ### Retrieve data
 
 The user can retrieve data about kids grouping them by group, all of them or just one kid and data about one recipe or all of them as well.
 
-![Image](images/readme/retrieve_data_1.png)
+![Image](images/readme/img/retrieve_data_1.png)
 
 In case there is a coincidence in the params of search, the user must choice an option choosing it by id.
 
-![Image](images/readme/object_coincidence_chosen.png)
+![Image](images/readme/img/object_coincidence_chosen.png)
+
+Once a user or a recipe has been selected, the user is shown the option to delete it.
+The same happens when the user chooses to see the menu for all the children. 
+
+![Image](images/readme/img/remove_option.png)
+
+If the user chooses to remove the menu(or a kid or a recipe) an alert is shown for the user to confirm. If they do it, the menu is removed and the user is send to the main menu.
+
+![Image](images/readme/img/remove_completed.png)
+
+#### Every menu can be updated, but if the user choose the menu for all the kids, this one prevails over the group menus.
+#### So, if the user choose the menu for all the children and after that they want to change and to chose a menu for each group, the menu for all must be removed, otherwise the user is not going to be able to add a menu for each group.
 
 ### Create data
 
@@ -95,11 +107,11 @@ The user can create kid and recipes data. The app will guide them asking for all
 
 Every field to fill has its validator and an alert will be show to user in case they enter the wrong data.
 
-![Image](images/readme/enter_incorrect_data.png)
+![Image](images/readme/img/enter_incorrect_data.png)
 
 When the data is saved a message is shown to the user
 
-![Image](images/readme/create_data_1.png)
+![Image](images/readme/img/create_data_1.png)
 
 ## Features left to implement
 

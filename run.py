@@ -331,7 +331,7 @@ Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}""")
         else:
             MENU.append_row(menu_data)
         help.print_continue_option()
-    # if there is one, show him and the recipes that their can eat to the
+    # if there is one, show the recipes that they can eat to the
     # user to choose one
     elif len(is_someone_allergic) == 1:
         kid = is_someone_allergic[0]
@@ -365,7 +365,7 @@ Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}""")
 Recipe {new_recipe['name']} selected for {kid['name']} {kid['last_name']}\n""")
         help.print_splitter_dash()
         print()
-        print(f"Must be prepared {quantity} rations of {recipe['name']}")
+        print(f"Must be prepared {quantity} rations of {recipe['name']}\n")
         print(f"Must be prepared 1 ration of {new_recipe['name']}\n")
         # add the kid id and quantity properties to the recipe
         new_recipe['kids_id'] = [kid['id']]

@@ -242,8 +242,6 @@ def remove_an_object(worksheet, obj_id=None, date=None):
             print_splitter_dash()
             print()
             print('Removed successfully\n')
-        else:
-            print('An error has occurred\n')
     if date:
         menus = worksheet.findall(date)
         for menu in menus:
@@ -253,5 +251,3 @@ def remove_an_object(worksheet, obj_id=None, date=None):
                 print_splitter_dash()
                 print()
                 print('Removed successfully\n')
-            else:
-                print('An error has occurred\n')
