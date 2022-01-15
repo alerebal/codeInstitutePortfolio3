@@ -218,7 +218,6 @@ def daily_menu():
     help.print_splitter_dash()
     print(txt.daily_menu)
     help.print_splitter_dash()
-    print()
     are_menu_created = check_created_menus()
     # if None the user wants to come back to main menu, but if I send them to
     # main menu here, exit option does not work. That's why I return None
@@ -305,11 +304,9 @@ def daily_menu():
                 new_recipe['quantity'] = 1
                 allowed.append(new_recipe)
                 new_recipe['kids_id'] = [kid['id']]
-            print()
             print(f"""
 Recipe {new_recipe['name']} selected for {kid['name']} {kid['last_name']}\n""")
         help.print_splitter_dash()
-        print()
         print(f"""
 Must be prepared {len(kids) - lenght} rations of {recipe['name']}""")
         for new_recipe in allowed:
@@ -360,7 +357,6 @@ Must be prepared {new_recipe['quantity']} ration of {new_recipe['name']}""")
             id_input = int(help.validate_data('Recipe Id:\n',
                                               only_numbers_regex))
             new_recipe = help.get_data_from_id(id_input, kid_allow_recipes)
-        print()
         print(f"""
 Recipe {new_recipe['name']} selected for {kid['name']} {kid['last_name']}\n""")
         help.print_splitter_dash()
@@ -416,7 +412,8 @@ def check_created_menus():
             })
     # if there is no a menu
     if len(are_menu_created) == 0:
-        print('There is no daily menu created yet\n')
+        print()
+        print('There is no daily menu created yet')
         while True:
             create_or_main_inp = """
 Press C to create a new menu or any key to go to main menu\n"""
@@ -430,7 +427,8 @@ Press C to create a new menu or any key to go to main menu\n"""
     else:
         created_groups = [group['group'].upper() for group in are_menu_created]
         if 'ALL' in created_groups:
-            print('The daily menu for ALL the children is ALREADY created\n')
+            print()
+            print('The daily menu for ALL the children is ALREADY created')
             while True:
                 show_menu_inp = """
 Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
@@ -462,7 +460,6 @@ Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
             for group in are_menu_created:
                 print(f"""
 The daily menu for the group {group['group'].upper()} is ALREADY created.""")
-            print()
             while True:
                 show_menu_inp = """
 Press S to see the menu, C to create a new menu, M to go back to main menu\n"""
